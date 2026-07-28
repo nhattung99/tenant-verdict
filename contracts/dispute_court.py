@@ -1,6 +1,7 @@
 # v0.2.16
 # { "Depends": "py-genlayer:v0.2.16" }
 import json
+from dataclasses import dataclass
 from genlayer import *
 
 @allow_storage
@@ -59,7 +60,6 @@ class Contract(gl.Contract):
     admin: Address
 
     def __init__(self):
-        super().__init__()
         self.dispute_counter = bigint(0)
         self.admin = gl.message.sender
         self.treasury_address = gl.message.sender
@@ -89,7 +89,6 @@ class Contract(gl.Contract):
         self.dispute_counter += bigint(1)
         dispute_id = str(self.dispute_counter)
 
-        # Deposit funds into Treasury contract cross-call or direct deposit
         new_dispute = Dispute(
             landlord=gl.message.sender,
             tenant=tenant,
@@ -147,7 +146,6 @@ class Contract(gl.Contract):
         deposit = dispute.deposit_amount
 
         def leader_fn() -> dict:
-            # Multi-source cross-check: fetch >= 2 independent evidence links when available
             movein_contents = []
             for u in movein_urls:
                 try:
@@ -184,15 +182,15 @@ Return ONLY a valid raw JSON object with NO markdown formatting, NO backticks:
             return _parse_verdict_json(raw)
 
         def validator_fn(leader_res) -> bool:
-            # Validator checks semantic agreement of verdict percentage (within ±5% tolerance), ignoring superficial explanation wording.
-            if not isinstance(leader_res, gl.vm.Return):
+            leader_val_dict = getattr(leader_res, 'value', leader_res)
+            if not isinstance(leader_val_dict, dict) or "tenant_refund_pct" not in leader_val_dict:
                 return False
             try:
                 my_res = leader_fn()
             except Exception:
                 return False
 
-            leader_val = leader_res.value["tenant_refund_pct"]
+            leader_val = leader_val_dict["tenant_refund_pct"]
             my_val = my_res["tenant_refund_pct"]
             return abs(my_val - leader_val) <= 5
 
@@ -255,13 +253,14 @@ Return ONLY raw JSON with NO markdown backticks:
             return _parse_verdict_json(raw)
 
         def validator_fn(leader_res) -> bool:
-            if not isinstance(leader_res, gl.vm.Return):
+            leader_val_dict = getattr(leader_res, 'value', leader_res)
+            if not isinstance(leader_val_dict, dict) or "tenant_refund_pct" not in leader_val_dict:
                 return False
             try:
                 my_res = leader_fn()
             except Exception:
                 return False
-            return abs(my_res["tenant_refund_pct"] - leader_res.value["tenant_refund_pct"]) <= 5
+            return abs(my_res["tenant_refund_pct"] - leader_val_dict["tenant_refund_pct"]) <= 5
 
         result = gl.vm.run_nondet(leader_fn, validator_fn)
 
@@ -277,7 +276,7 @@ Return ONLY raw JSON with NO markdown backticks:
         dispute = self.disputes[dispute_id]
         refund_pct = dispute.tenant_refund_pct
 
-        # Cross-contract payout execution via Treasury (no gl.eth.send_value)
+        # Cross-contract payout execution via Treasury
         treasury = gl.get_contract_at(self.treasury_address)
         treasury.release_payout(dispute_id, dispute.tenant, dispute.landlord, refund_pct)
 

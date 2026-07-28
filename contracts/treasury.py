@@ -8,7 +8,6 @@ class Contract(gl.Contract):
     admin: Address
 
     def __init__(self):
-        super().__init__()
         self.admin = gl.message.sender
         self.court_address = gl.message.sender
 
@@ -20,7 +19,7 @@ class Contract(gl.Contract):
 
     @gl.public.write
     def deposit(self, dispute_id: str):
-        # Native GEN attached to the transaction via gl.message.value
+        # Native GEN attached to transaction via gl.message.value
         amount = gl.message.value
         if amount <= bigint(0):
             raise UserError("Deposit amount must be greater than 0")
@@ -49,7 +48,7 @@ class Contract(gl.Contract):
         # Clear balance before transfers (reentrancy prevention)
         self.balances[dispute_id] = bigint(0)
 
-        # Distribute payouts natively using GenLayer transfer primitives (no gl.eth.send_value)
+        # Distribute payouts natively using GenLayer transfer primitives
         if tenant_share > bigint(0):
             gl.transfer(tenant, tenant_share)
         if landlord_share > bigint(0):
