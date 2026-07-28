@@ -68,7 +68,7 @@ class Contract(gl.Contract):
     @gl.public.write
     def set_treasury_address(self, treasury: Address):
         if gl.message.sender != self.admin:
-            raise UserError("Only admin can set treasury address")
+            raise UserError("Only admin can set court address")
         self.treasury_address = treasury
 
     @gl.public.write
@@ -139,7 +139,6 @@ class Contract(gl.Contract):
         if dispute.status == "OPEN":
             raise UserError("Tenant move-out evidence must be submitted before requesting verdict")
 
-        # Read state before non-deterministic execution block
         movein_urls = dispute.movein_evidence_urls
         moveout_urls = dispute.moveout_evidence_urls
         statement = dispute.tenant_statement
@@ -194,7 +193,6 @@ Return ONLY a valid raw JSON object with NO markdown formatting, NO backticks:
             my_val = my_res["tenant_refund_pct"]
             return abs(my_val - leader_val) <= 5
 
-        # Execute non-deterministic AI consensus
         result = gl.vm.run_nondet(leader_fn, validator_fn)
 
         refund_pct = u256(result["tenant_refund_pct"])
@@ -206,7 +204,6 @@ Return ONLY a valid raw JSON object with NO markdown formatting, NO backticks:
         dispute.verdict_reason = reason
 
         if confidence < u256(60):
-            # Low confidence triggers escalation path for appeal
             dispute.status = "AWAITING_APPEAL"
             self.disputes[dispute_id] = dispute
         else:
@@ -276,11 +273,9 @@ Return ONLY raw JSON with NO markdown backticks:
         dispute = self.disputes[dispute_id]
         refund_pct = dispute.tenant_refund_pct
 
-        # Cross-contract payout execution via Treasury
         treasury = gl.get_contract_at(self.treasury_address)
         treasury.release_payout(dispute_id, dispute.tenant, dispute.landlord, refund_pct)
 
-        # Update reputation stats cross-contract
         reputation = gl.get_contract_at(self.reputation_address)
         tenant_won = refund_pct >= u256(50)
         reputation.record_dispute_result(dispute.tenant, tenant_won, refund_pct)
@@ -290,24 +285,11 @@ Return ONLY raw JSON with NO markdown backticks:
         self.disputes[dispute_id] = dispute
 
     @gl.public.view
-    def get_dispute(self, dispute_id: str) -> dict:
+    def get_dispute_status(self, dispute_id: str) -> str:
         if dispute_id not in self.disputes:
-            return {}
-        d = self.disputes[dispute_id]
-        return {
-            "landlord": str(d.landlord),
-            "tenant": str(d.tenant),
-            "deposit_amount": str(d.deposit_amount),
-            "movein_evidence_urls": [str(u) for u in d.movein_evidence_urls],
-            "moveout_evidence_urls": [str(u) for u in d.moveout_evidence_urls],
-            "tenant_statement": str(d.tenant_statement),
-            "status": str(d.status),
-            "tenant_refund_pct": int(d.tenant_refund_pct),
-            "verdict_reason": str(d.verdict_reason),
-            "confidence": int(d.confidence),
-            "appeal_count": int(d.appeal_count),
-        }
+            return ""
+        return str(self.disputes[dispute_id].status)
 
     @gl.public.view
-    def get_dispute_count(self) -> int:
-        return int(self.dispute_counter)
+    def get_dispute_count(self) -> u256:
+        return u256(self.dispute_counter)

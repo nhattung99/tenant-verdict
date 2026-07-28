@@ -38,11 +38,21 @@ class Contract(gl.Contract):
         self.trust_scores[user_key] = trust
 
     @gl.public.view
-    def get_reputation(self, user: Address) -> dict:
+    def get_trust_score(self, user: Address) -> u256:
         user_key = str(user)
-        return {
-            "total_disputes": int(self.total_disputes.get(user_key, u256(0))),
-            "wins": int(self.wins.get(user_key, u256(0))),
-            "losses": int(self.losses.get(user_key, u256(0))),
-            "trust_score": int(self.trust_scores.get(user_key, u256(100))),
-        }
+        return self.trust_scores.get(user_key, u256(100))
+
+    @gl.public.view
+    def get_total_disputes(self, user: Address) -> u256:
+        user_key = str(user)
+        return self.total_disputes.get(user_key, u256(0))
+
+    @gl.public.view
+    def get_wins(self, user: Address) -> u256:
+        user_key = str(user)
+        return self.wins.get(user_key, u256(0))
+
+    @gl.public.view
+    def get_losses(self, user: Address) -> u256:
+        user_key = str(user)
+        return self.losses.get(user_key, u256(0))

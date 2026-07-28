@@ -59,17 +59,22 @@ class _VM:
         return res
 
 class Contract:
-    def __init__(self):
-        for attr, attr_type in getattr(self, "__annotations__", {}).items():
-            if not hasattr(self, attr):
+    def __new__(cls, *args, **kwargs):
+        instance = super().__new__(cls)
+        for attr, attr_type in getattr(cls, "__annotations__", {}).items():
+            if not hasattr(instance, attr):
                 if attr_type == TreeMap or getattr(attr_type, "__name__", "") == "TreeMap":
-                    setattr(self, attr, TreeMap())
+                    setattr(instance, attr, TreeMap())
                 elif attr_type == DynArray or getattr(attr_type, "__name__", "") == "DynArray":
-                    setattr(self, attr, DynArray())
+                    setattr(instance, attr, DynArray())
                 elif attr_type == bigint or getattr(attr_type, "__name__", "") == "bigint":
-                    setattr(self, attr, bigint(0))
+                    setattr(instance, attr, bigint(0))
                 elif attr_type == Address or getattr(attr_type, "__name__", "") == "Address":
-                    setattr(self, attr, Address("0x0000000000000000000000000000000000000000"))
+                    setattr(instance, attr, Address("0x0000000000000000000000000000000000000000"))
+        return instance
+
+    def __init__(self):
+        pass
 
 class _ContractRef:
 

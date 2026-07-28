@@ -116,10 +116,36 @@ export const fetchDisputeData = async (disputeId) => {
 
 export const fetchUserReputation = async (userAddress) => {
   const client = getGenLayerClient();
-  const rep = await client.readContract({
-    address: CONTRACT_ADDRESSES.REPUTATION,
-    functionName: 'get_reputation',
-    args: [userAddress],
-  });
-  return rep;
+  try {
+    const trustScore = await client.readContract({
+      address: CONTRACT_ADDRESSES.REPUTATION,
+      functionName: 'get_trust_score',
+      args: [userAddress],
+    });
+    const totalDisputes = await client.readContract({
+      address: CONTRACT_ADDRESSES.REPUTATION,
+      functionName: 'get_total_disputes',
+      args: [userAddress],
+    });
+    const wins = await client.readContract({
+      address: CONTRACT_ADDRESSES.REPUTATION,
+      functionName: 'get_wins',
+      args: [userAddress],
+    });
+    const losses = await client.readContract({
+      address: CONTRACT_ADDRESSES.REPUTATION,
+      functionName: 'get_losses',
+      args: [userAddress],
+    });
+
+    return {
+      trust_score: Number(trustScore),
+      total_disputes: Number(totalDisputes),
+      wins: Number(wins),
+      losses: Number(losses),
+    };
+  } catch (e) {
+    return { trust_score: 100, total_disputes: 0, wins: 0, losses: 0 };
+  }
 };
+
