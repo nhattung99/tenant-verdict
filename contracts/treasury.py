@@ -19,7 +19,6 @@ class Contract(gl.Contract):
 
     @gl.public.write
     def deposit(self, dispute_id: str):
-        # Native GEN attached to transaction via gl.message.value
         amount = gl.message.value
         if amount <= bigint(0):
             raise UserError("Deposit amount must be greater than 0")
@@ -31,7 +30,6 @@ class Contract(gl.Contract):
 
     @gl.public.write
     def release_payout(self, dispute_id: str, tenant: Address, landlord: Address, tenant_refund_pct: u256):
-        # Must be invoked by DisputeCourt after verdict finalization
         if gl.message.sender != self.court_address and gl.message.sender != self.admin:
             raise UserError("Only authorized court contract can release payouts")
 
@@ -45,10 +43,8 @@ class Contract(gl.Contract):
         tenant_share = (total * bigint(tenant_refund_pct)) // bigint(100)
         landlord_share = total - tenant_share
 
-        # Clear balance before transfers (reentrancy prevention)
         self.balances[dispute_id] = bigint(0)
 
-        # Distribute payouts natively using GenLayer transfer primitives
         if tenant_share > bigint(0):
             gl.transfer(tenant, tenant_share)
         if landlord_share > bigint(0):

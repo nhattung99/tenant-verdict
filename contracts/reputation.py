@@ -1,18 +1,12 @@
 # v0.2.16
 # { "Depends": "py-genlayer:v0.2.16" }
-from dataclasses import dataclass
 from genlayer import *
 
-@allow_storage
-@dataclass
-class ReputationScore:
-    total_disputes: u256
-    wins: u256
-    losses: u256
-    trust_score: u256  # 0 to 100 percentage
-
 class Contract(gl.Contract):
-    reputation_scores: TreeMap[str, ReputationScore]
+    total_disputes: TreeMap[str, u256]
+    wins: TreeMap[str, u256]
+    losses: TreeMap[str, u256]
+    trust_scores: TreeMap[str, u256]
     admin: Address
     court_address: Address
 
@@ -32,45 +26,23 @@ class Contract(gl.Contract):
             raise UserError("Only authorized court can update reputation")
 
         user_key = str(user)
-        if user_key not in self.reputation_scores:
-            current = ReputationScore(
-                total_disputes=u256(0),
-                wins=u256(0),
-                losses=u256(0),
-                trust_score=u256(100),
-            )
-        else:
-            current = self.reputation_scores[user_key]
+        tot = self.total_disputes.get(user_key, u256(0)) + u256(1)
+        w = self.wins.get(user_key, u256(0)) + (u256(1) if is_winner else u256(0))
+        l = self.losses.get(user_key, u256(0)) + (u256(0) if is_winner else u256(1))
+        
+        trust = (w * u256(100)) // tot
 
-        new_total = current.total_disputes + u256(1)
-        new_wins = current.wins + (u256(1) if is_winner else u256(0))
-        new_losses = current.losses + (u256(0) if is_winner else u256(1))
-
-        win_ratio = (new_wins * u256(100)) // new_total
-        new_trust = win_ratio
-
-        updated = ReputationScore(
-            total_disputes=new_total,
-            wins=new_wins,
-            losses=new_losses,
-            trust_score=new_trust,
-        )
-        self.reputation_scores[user_key] = updated
+        self.total_disputes[user_key] = tot
+        self.wins[user_key] = w
+        self.losses[user_key] = l
+        self.trust_scores[user_key] = trust
 
     @gl.public.view
     def get_reputation(self, user: Address) -> dict:
         user_key = str(user)
-        if user_key not in self.reputation_scores:
-            return {
-                "total_disputes": 0,
-                "wins": 0,
-                "losses": 0,
-                "trust_score": 100,
-            }
-        score = self.reputation_scores[user_key]
         return {
-            "total_disputes": int(score.total_disputes),
-            "wins": int(score.wins),
-            "losses": int(score.losses),
-            "trust_score": int(score.trust_score),
+            "total_disputes": int(self.total_disputes.get(user_key, u256(0))),
+            "wins": int(self.wins.get(user_key, u256(0))),
+            "losses": int(self.losses.get(user_key, u256(0))),
+            "trust_score": int(self.trust_scores.get(user_key, u256(100))),
         }
