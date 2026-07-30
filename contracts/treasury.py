@@ -19,14 +19,12 @@ class Contract(gl.Contract):
 
     @gl.public.write
     def deposit(self, dispute_id: str):
-        amount = gl.message.value
-        if amount <= bigint(0):
+        val = gl.message.value
+        if val <= bigint(0):
             raise UserError("Deposit amount must be greater than 0")
-        
         if dispute_id in self.balances and self.balances[dispute_id] > bigint(0):
-            raise UserError("Escrow deposit already exists for this dispute")
-
-        self.balances[dispute_id] = amount
+            raise UserError("Escrow deposit already exists")
+        self.balances[dispute_id] = val
 
     @gl.public.write
     def release_payout(self, dispute_id: str, tenant: Address, landlord: Address, tenant_refund_pct: u256):

@@ -13,14 +13,13 @@ class Dispute:
     movein_evidence_urls: DynArray[str]
     moveout_evidence_urls: DynArray[str]
     tenant_statement: str
-    status: str  # "OPEN" | "AWAITING_VERDICT" | "AWAITING_APPEAL" | "VERDICT_ISSUED" | "CLOSED"
-    tenant_refund_pct: u256  # 0-100
+    status: str
+    tenant_refund_pct: u256
     verdict_reason: str
-    confidence: u256  # 0-100
+    confidence: u256
     appeal_count: u256
 
 def _parse_verdict_json(raw_text: str) -> dict:
-    """Helper function to strip markdown fences and parse LLM JSON verdict."""
     cleaned = raw_text.strip()
     if cleaned.startswith("```"):
         lines = cleaned.splitlines()
@@ -42,9 +41,9 @@ def _parse_verdict_json(raw_text: str) -> dict:
     conf = int(data["confidence"])
 
     if pct < 0 or pct > 100:
-        raise UserError(f"tenant_refund_pct out of bounds (0-100): {pct}")
+        raise UserError(f"tenant_refund_pct out of bounds: {pct}")
     if conf < 0 or conf > 100:
-        raise UserError(f"confidence out of bounds (0-100): {conf}")
+        raise UserError(f"confidence out of bounds: {conf}")
 
     return {
         "tenant_refund_pct": pct,
@@ -279,10 +278,28 @@ Return ONLY raw JSON with NO markdown backticks:
         reputation = gl.get_contract_at(self.reputation_address)
         tenant_won = refund_pct >= u256(50)
         reputation.record_dispute_result(dispute.tenant, tenant_won, refund_pct)
-        reputation.record_dispute_result(dispute.landlord, not tenant_won, u256(100) - refund_pct)
 
         dispute.status = "CLOSED"
         self.disputes[dispute_id] = dispute
+
+    @gl.public.view
+    def get_dispute(self, dispute_id: str) -> dict:
+        if dispute_id not in self.disputes:
+            return {}
+        d = self.disputes[dispute_id]
+        return {
+            "landlord": str(d.landlord),
+            "tenant": str(d.tenant),
+            "deposit_amount": str(d.deposit_amount),
+            "movein_evidence_urls": [str(u) for u in d.movein_evidence_urls],
+            "moveout_evidence_urls": [str(u) for u in d.moveout_evidence_urls],
+            "tenant_statement": str(d.tenant_statement),
+            "status": str(d.status),
+            "tenant_refund_pct": int(d.tenant_refund_pct),
+            "verdict_reason": str(d.verdict_reason),
+            "confidence": int(d.confidence),
+            "appeal_count": int(d.appeal_count),
+        }
 
     @gl.public.view
     def get_dispute_status(self, dispute_id: str) -> str:
