@@ -1,9 +1,11 @@
 // GenLayer Network and Contract Configuration
 
+const mainAddress = import.meta.env.VITE_CONTRACT_ADDRESS || '';
+
 export const CONTRACT_ADDRESSES = {
-  DISPUTE_COURT: import.meta.env.VITE_DISPUTE_COURT_ADDRESS || '',
-  TREASURY: import.meta.env.VITE_TREASURY_ADDRESS || '',
-  REPUTATION: import.meta.env.VITE_REPUTATION_ADDRESS || '',
+  DISPUTE_COURT: import.meta.env.VITE_DISPUTE_COURT_ADDRESS || mainAddress,
+  TREASURY: import.meta.env.VITE_TREASURY_ADDRESS || mainAddress,
+  REPUTATION: import.meta.env.VITE_REPUTATION_ADDRESS || mainAddress,
 };
 
 export const STUDIONET_CONFIG = {
@@ -11,7 +13,7 @@ export const STUDIONET_CONFIG = {
   chainIdDecimal: 61999,
   chainName: 'GenLayer Studio Net',
   rpcUrl: 'https://studio.genlayer.com/api',
-  blockExplorerUrl: 'https://studio.genlayer.com/explorer',
+  blockExplorerUrl: 'https://genlayer-explorer.vercel.app',
   nativeCurrency: {
     name: 'GEN Token',
     symbol: 'GEN',
