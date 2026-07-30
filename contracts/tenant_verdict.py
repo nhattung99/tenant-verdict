@@ -72,14 +72,22 @@ class TenantVerdict(gl.Contract):
         if deposit_val <= bigint(0):
             raise UserError("Deposit amount must be greater than 0")
         
+        if tenant == Address("0x0000000000000000000000000000000000000000"):
+            raise UserError("Tenant address cannot be the zero address")
+
+        if gl.message.sender == tenant:
+            raise UserError("Landlord address cannot be identical to tenant address")
+
         if len(movein_urls) == 0:
             raise UserError("Move-in evidence URLs list cannot be empty")
 
         self.dispute_counter += bigint(1)
         dispute_id = str(self.dispute_counter)
 
+        # Securely escrow deposit balance under the immutable dispute_id
         self.balances[dispute_id] = deposit_val
 
+        # Immutable registration binding landlord and tenant addresses
         new_dispute = Dispute(
             landlord=gl.message.sender,
             tenant=tenant,
@@ -106,8 +114,9 @@ class TenantVerdict(gl.Contract):
         if dispute.status != "OPEN":
             raise UserError(f"Cannot submit evidence when dispute status is {dispute.status}")
 
+        # Authenticate sender against authoritative registered dispute records
         if gl.message.sender != dispute.tenant and gl.message.sender != dispute.landlord:
-            raise UserError("Only involved tenant or landlord can submit evidence")
+            raise UserError("Only authorized registered tenant or landlord can submit evidence")
 
         if len(moveout_urls) == 0:
             raise UserError("Move-out evidence URLs list cannot be empty")
@@ -159,10 +168,12 @@ Move-out Condition Evidence: {moveout_contents}
 Tenant Counter-Statement: {statement}
 Escrow Deposit Amount: {deposit}
 
+Verify domain authenticity and evidence URL integrity.
 Evaluate fair wear-and-tear vs damage caused by tenant negligence.
+
 Determine:
 1. "tenant_refund_pct": Integer 0 to 100 representing the percentage of deposit to be refunded to tenant.
-2. "confidence": Integer 0 to 100 representing your confidence in this verdict based on clarity of evidence.
+2. "confidence": Integer 0 to 100 representing your confidence in this verdict based on clarity and authenticity of evidence.
 3. "reason": A detailed breakdown of your verdict reasoning.
 
 Return ONLY a valid raw JSON object with NO markdown formatting, NO backticks:
@@ -173,16 +184,23 @@ Return ONLY a valid raw JSON object with NO markdown formatting, NO backticks:
 
         def validator_fn(leader_res) -> bool:
             leader_val_dict = getattr(leader_res, 'value', leader_res)
-            if not isinstance(leader_val_dict, dict) or "tenant_refund_pct" not in leader_val_dict:
+            if not isinstance(leader_val_dict, dict) or "tenant_refund_pct" not in leader_val_dict or "confidence" not in leader_val_dict:
                 return False
             try:
                 my_res = leader_fn()
             except Exception:
                 return False
 
-            leader_val = leader_val_dict["tenant_refund_pct"]
-            my_val = my_res["tenant_refund_pct"]
-            return abs(my_val - leader_val) <= 5
+            leader_pct = int(leader_val_dict["tenant_refund_pct"])
+            my_pct = int(my_res["tenant_refund_pct"])
+            
+            leader_conf = int(leader_val_dict["confidence"])
+            my_conf = int(my_res["confidence"])
+
+            # Validate tolerance bounds across non-deterministic validator runs
+            pct_agreed = abs(my_pct - leader_pct) <= 5
+            conf_agreed = abs(my_conf - leader_conf) <= 15
+            return pct_agreed and conf_agreed
 
         result = gl.vm.run_nondet(leader_fn, validator_fn)
 
@@ -248,7 +266,9 @@ Return ONLY raw JSON with NO markdown backticks:
                 my_res = leader_fn()
             except Exception:
                 return False
-            return abs(my_res["tenant_refund_pct"] - leader_val_dict["tenant_refund_pct"]) <= 5
+            leader_pct = int(leader_val_dict["tenant_refund_pct"])
+            my_pct = int(my_res["tenant_refund_pct"])
+            return abs(my_pct - leader_pct) <= 5
 
         result = gl.vm.run_nondet(leader_fn, validator_fn)
 
@@ -264,6 +284,10 @@ Return ONLY raw JSON with NO markdown backticks:
         dispute = self.disputes[dispute_id]
         refund_pct = dispute.tenant_refund_pct
 
+        # Authoritative address binding check before funds release
+        if dispute.tenant == Address("0x0000000000000000000000000000000000000000") or dispute.landlord == Address("0x0000000000000000000000000000000000000000"):
+            raise UserError("Invalid participant recipient binding in dispute record")
+
         if dispute_id in self.balances and self.balances[dispute_id] > bigint(0):
             total = self.balances[dispute_id]
             tenant_share = (total * bigint(refund_pct)) // bigint(100)
@@ -271,6 +295,7 @@ Return ONLY raw JSON with NO markdown backticks:
 
             self.balances[dispute_id] = bigint(0)
 
+            # Strictly release payout ONLY to authoritative registered dispute tenant & landlord addresses
             if tenant_share > bigint(0):
                 gl.transfer(dispute.tenant, tenant_share)
             if landlord_share > bigint(0):
