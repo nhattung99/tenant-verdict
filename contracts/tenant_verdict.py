@@ -1,5 +1,10 @@
 # v0.2.16
-# { "Depends": "py-genlayer:v0.2.16" }
+# {
+#   "Seq": [
+#     { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
+#   ]
+# }
+
 import json
 from dataclasses import dataclass
 from genlayer import *
@@ -13,10 +18,10 @@ class Dispute:
     movein_evidence_urls: DynArray[str]
     moveout_evidence_urls: DynArray[str]
     tenant_statement: str
-    status: str  # "OPEN" | "AWAITING_VERDICT" | "AWAITING_APPEAL" | "VERDICT_ISSUED" | "CLOSED"
-    tenant_refund_pct: u256  # 0-100
+    status: str
+    tenant_refund_pct: u256
     verdict_reason: str
-    confidence: u256  # 0-100
+    confidence: u256
     appeal_count: u256
 
 def _parse_verdict_json(raw_text: str) -> dict:
@@ -51,7 +56,7 @@ def _parse_verdict_json(raw_text: str) -> dict:
         "reason": str(data["reason"]),
     }
 
-class Contract(gl.Contract):
+class TenantVerdict(gl.Contract):
     disputes: TreeMap[str, Dispute]
     balances: TreeMap[str, bigint]
     trust_scores: TreeMap[str, u256]
@@ -73,7 +78,6 @@ class Contract(gl.Contract):
         self.dispute_counter += bigint(1)
         dispute_id = str(self.dispute_counter)
 
-        # Escrow deposit in contract balances
         self.balances[dispute_id] = deposit_val
 
         new_dispute = Dispute(
@@ -94,7 +98,7 @@ class Contract(gl.Contract):
         return dispute_id
 
     @gl.public.write
-    def submit_tenant_evidence(self, dispute_id: str, moveout_urls: DynArray[str], statement: str):
+    def submit_tenant_evidence(self, dispute_id: str, moveout_urls: DynArray[str], statement: str) -> None:
         if dispute_id not in self.disputes:
             raise UserError("Dispute ID does not exist")
 
@@ -114,7 +118,7 @@ class Contract(gl.Contract):
         self.disputes[dispute_id] = dispute
 
     @gl.public.write
-    def request_verdict(self, dispute_id: str):
+    def request_verdict(self, dispute_id: str) -> None:
         if dispute_id not in self.disputes:
             raise UserError("Dispute ID does not exist")
 
@@ -199,7 +203,7 @@ Return ONLY a valid raw JSON object with NO markdown formatting, NO backticks:
             self._finalize_payout(dispute_id)
 
     @gl.public.write
-    def appeal_verdict(self, dispute_id: str):
+    def appeal_verdict(self, dispute_id: str) -> None:
         if dispute_id not in self.disputes:
             raise UserError("Dispute ID does not exist")
 
@@ -256,7 +260,7 @@ Return ONLY raw JSON with NO markdown backticks:
 
         self._finalize_payout(dispute_id)
 
-    def _finalize_payout(self, dispute_id: str):
+    def _finalize_payout(self, dispute_id: str) -> None:
         dispute = self.disputes[dispute_id]
         refund_pct = dispute.tenant_refund_pct
 
@@ -272,7 +276,6 @@ Return ONLY raw JSON with NO markdown backticks:
             if landlord_share > bigint(0):
                 gl.transfer(dispute.landlord, landlord_share)
 
-        # Update reputation stats
         t_key = str(dispute.tenant)
         l_key = str(dispute.landlord)
 
