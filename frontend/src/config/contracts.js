@@ -13,7 +13,7 @@ export const STUDIONET_CONFIG = {
   chainIdDecimal: 61999,
   chainName: 'GenLayer Studio Net',
   rpcUrl: 'https://studio.genlayer.com/api',
-  blockExplorerUrl: 'https://genlayer-explorer.vercel.app',
+  blockExplorerUrl: 'https://explorer-studio.genlayer.com',
   nativeCurrency: {
     name: 'GEN Token',
     symbol: 'GEN',

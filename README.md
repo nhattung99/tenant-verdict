@@ -60,11 +60,11 @@ TenantVerdict consists of 3 interacting GenLayer Intelligent Contracts in `contr
 ## 📋 Deployed Contract (studionet)
 
 - **Contract Address**: `0xCd51507ed83C6AA140de7f85e19872Ac1AC41Be6`
-- **Block Explorer**: [View on GenLayer Explorer](https://genlayer-explorer.vercel.app/address/0xCd51507ed83C6AA140de7f85e19872Ac1AC41Be6)
+- **Block Explorer**: [View on GenLayer Explorer](https://explorer-studio.genlayer.com/address/0xCd51507ed83C6AA140de7f85e19872Ac1AC41Be6)
 
 | Contract | Network | Address | Explorer Link |
 |---|---|---|---|
-| `TenantVerdict` | `studionet` | `0xCd51507ed83C6AA140de7f85e19872Ac1AC41Be6` | [Explorer](https://genlayer-explorer.vercel.app/address/0xCd51507ed83C6AA140de7f85e19872Ac1AC41Be6) |
+| `TenantVerdict` | `studionet` | `0xCd51507ed83C6AA140de7f85e19872Ac1AC41Be6` | [Explorer](https://explorer-studio.genlayer.com/address/0xCd51507ed83C6AA140de7f85e19872Ac1AC41Be6) |
 
 
 
