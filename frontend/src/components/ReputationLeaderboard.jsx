@@ -1,5 +1,4 @@
 import React from 'react';
-import { ShieldCheck, Award, TrendingUp, UserCheck, Star } from 'lucide-react';
 
 export default function ReputationLeaderboard({ userReputation, userAddress }) {
   const defaultLeaderboard = [
@@ -9,37 +8,39 @@ export default function ReputationLeaderboard({ userReputation, userAddress }) {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="glass-card p-6 border-slate-700/60">
-        <div className="flex items-center gap-3 border-b border-slate-800 pb-4 mb-6">
-          <div className="p-3 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-500/20">
-            <Award className="w-6 h-6" />
+    <div className="space-y-8">
+      <div className="glass-card p-8 border-white/10 space-y-6">
+        <div className="flex items-center gap-4 border-b border-white/10 pb-5">
+          <div className="w-12 h-12 rounded-xl bg-[#e9c349]/20 text-[#e9c349] border border-[#e9c349]/30 flex items-center justify-center">
+            <span className="material-symbols-outlined text-3xl">verified</span>
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-white">Trust & Reputation Scores</h2>
-            <p className="text-sm text-slate-400">
-              Recorded directly by the GenLayer <code className="text-purple-300">Reputation.py</code> Intelligent Contract.
+            <h2 className="font-serif text-3xl font-bold text-white">Trust & On-Chain Reputation</h2>
+            <p className="text-xs text-zinc-400 font-mono mt-0.5">
+              Recorded directly by the GenLayer <code className="text-[#e9c349]">TenantVerdict</code> Intelligent Contract
             </p>
           </div>
         </div>
 
         {/* User's own reputation card if connected */}
         {userAddress && userReputation && (
-          <div className="bg-gradient-to-r from-cyan-950/60 via-slate-900 to-purple-950/60 border border-cyan-500/30 rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="bg-[#1a1c1c] border border-[#e9c349]/40 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 glow-border-gold">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 font-extrabold text-xl">
+              <div className="w-16 h-16 rounded-xl bg-[#e9c349]/20 border border-[#e9c349]/40 flex items-center justify-center text-[#e9c349] font-mono font-extrabold text-2xl">
                 {userReputation.trust_score}%
               </div>
               <div>
-                <span className="badge badge-open text-[10px] mb-1">Your On-Chain Metric</span>
-                <h3 className="text-lg font-bold text-white font-mono">{userAddress}</h3>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#e9c349] bg-[#e9c349]/10 px-2.5 py-0.5 rounded border border-[#e9c349]/20">
+                  Your On-Chain Metric
+                </span>
+                <h3 className="text-base font-bold text-white font-mono mt-1">{userAddress}</h3>
+                <p className="text-xs text-zinc-400 mt-0.5 font-mono">
                   Arbitrated {userReputation.total_disputes} disputes • {userReputation.wins} Wins / {userReputation.losses} Losses
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2 bg-slate-950/80 px-4 py-2 rounded-xl border border-slate-800 text-xs text-emerald-400 font-mono">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" /> High Reliability Participant
+            <div className="flex items-center gap-2 bg-[#0c0f0f] px-4 py-2 rounded-xl border border-white/10 text-xs text-[#4ce337] font-mono">
+              <span className="material-symbols-outlined text-base text-[#4ce337]">verified_user</span> Verified Participant
             </div>
           </div>
         )}
@@ -48,31 +49,31 @@ export default function ReputationLeaderboard({ userReputation, userAddress }) {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-mono">
             <thead>
-              <tr className="border-b border-slate-800 text-slate-400 uppercase tracking-wider">
-                <th className="pb-3 px-4">Participant</th>
-                <th className="pb-3 px-4">Role</th>
-                <th className="pb-3 px-4 text-center">Trust Score</th>
-                <th className="pb-3 px-4 text-center">Total Disputes</th>
-                <th className="pb-3 px-4 text-center">Win / Loss</th>
+              <tr className="border-b border-white/10 text-zinc-400 uppercase tracking-widest text-[11px]">
+                <th className="pb-4 px-4">Participant Address</th>
+                <th className="pb-4 px-4">Role</th>
+                <th className="pb-4 px-4 text-center">Trust Score</th>
+                <th className="pb-4 px-4 text-center">Total Disputes</th>
+                <th className="pb-4 px-4 text-center">Win / Loss</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-white/5">
               {defaultLeaderboard.map((item, idx) => (
-                <tr key={idx} className="hover:bg-slate-800/30 transition-colors">
-                  <td className="py-4 px-4 font-bold text-slate-200">{item.address}</td>
+                <tr key={idx} className="hover:bg-white/5 transition-colors">
+                  <td className="py-4 px-4 font-bold text-zinc-200">{item.address}</td>
                   <td className="py-4 px-4">
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-sans font-bold ${
-                      item.role === 'Tenant' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
+                    <span className={`px-2.5 py-1 rounded text-[10px] font-mono font-bold uppercase ${
+                      item.role === 'Tenant' ? 'bg-[#4ce337]/15 text-[#4ce337] border border-[#4ce337]/30' : 'bg-[#e9c349]/15 text-[#e9c349] border border-[#e9c349]/30'
                     }`}>
                       {item.role}
                     </span>
                   </td>
                   <td className="py-4 px-4 text-center">
-                    <span className="font-extrabold text-emerald-400 text-sm">{item.trustScore}%</span>
+                    <span className="font-extrabold text-[#4ce337] text-sm">{item.trustScore}%</span>
                   </td>
-                  <td className="py-4 px-4 text-center text-slate-300">{item.totalDisputes}</td>
-                  <td className="py-4 px-4 text-center text-slate-300">
-                    <span className="text-emerald-400">{item.wins}W</span> / <span className="text-rose-400">{item.losses}L</span>
+                  <td className="py-4 px-4 text-center text-zinc-300">{item.totalDisputes}</td>
+                  <td className="py-4 px-4 text-center text-zinc-300">
+                    <span className="text-[#4ce337]">{item.wins}W</span> / <span className="text-rose-400">{item.losses}L</span>
                   </td>
                 </tr>
               ))}

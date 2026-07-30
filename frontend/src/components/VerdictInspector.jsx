@@ -1,18 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Scale,
-  BrainCircuit,
-  ExternalLink,
-  ShieldCheck,
-  ShieldAlert,
-  Clock,
-  ArrowLeft,
-  Sparkles,
-  FileCheck,
-  AlertCircle,
-  TrendingUp,
-} from 'lucide-react';
-import { STUDIONET_CONFIG, CONTRACT_ADDRESSES } from '../config/contracts';
+import { STUDIONET_CONFIG } from '../config/contracts';
 
 export default function VerdictInspector({
   dispute,
@@ -31,9 +18,7 @@ export default function VerdictInspector({
     setIsProcessing(true);
     setConsensusStep(1);
     try {
-      // Step 1: Web rendering simulation
       setTimeout(() => setConsensusStep(2), 2000);
-      // Step 2: Multi-validator LLM execution & tolerance check
       setTimeout(() => setConsensusStep(3), 4500);
 
       await onRequestVerdict(dispute.id);
@@ -60,200 +45,228 @@ export default function VerdictInspector({
   const isAwaitingAppeal = dispute.status === 'AWAITING_APPEAL';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Top Header Navigation */}
       <div className="flex items-center justify-between">
-        <button onClick={onBack} className="btn-secondary text-xs py-2 px-3">
-          <ArrowLeft className="w-4 h-4" /> Back to Disputes
+        <button onClick={onBack} className="btn-outline text-xs py-2 px-4">
+          <span className="material-symbols-outlined text-sm">arrow_back</span> Back to Dashboard
         </button>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 font-mono text-xs">
           <a
             href={`${STUDIONET_CONFIG.blockExplorerUrl}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-slate-400 hover:text-cyan-300 flex items-center gap-1 font-mono"
+            className="text-zinc-400 hover:text-[#e9c349] flex items-center gap-1"
           >
-            Explorer <ExternalLink className="w-3 h-3" />
+            <span>GenLayer Explorer</span>
+            <span className="material-symbols-outlined text-sm">open_in_new</span>
           </a>
         </div>
       </div>
 
-      {/* Main Trial Details Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left 2 Cols: Evidence & Case Brief */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="glass-card p-6 border-slate-700/60">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
-              <div>
-                <span className="text-xs font-mono text-cyan-400 font-bold bg-cyan-500/10 px-2.5 py-1 rounded-lg">
-                  Dispute #{dispute.id}
-                </span>
-                <h2 className="text-xl font-bold text-white mt-2">Security Deposit Arbitration Trial</h2>
-              </div>
-              <div className="text-right font-mono">
-                <span className="text-xs text-slate-400">Escrow Amount</span>
-                <p className="text-xl font-extrabold text-amber-400">{dispute.deposit_amount} GEN</p>
-              </div>
-            </div>
-
-            {/* Evidence Breakdown */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              {/* Move-in Evidence */}
-              <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                <h4 className="text-xs font-bold text-cyan-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <FileCheck className="w-4 h-4 text-cyan-400" /> Move-In Web Evidence
-                </h4>
-                <ul className="space-y-1.5 text-xs font-mono text-slate-300">
-                  {dispute.movein_evidence_urls?.map((url, i) => (
-                    <li key={i} className="truncate bg-slate-950 p-2 rounded border border-slate-850">
-                      <a href={url} target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline flex items-center gap-1">
-                        🔗 {url}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Move-out Evidence */}
-              <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                <h4 className="text-xs font-bold text-purple-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <FileCheck className="w-4 h-4 text-purple-400" /> Move-Out Web Evidence
-                </h4>
-                {dispute.moveout_evidence_urls?.length > 0 ? (
-                  <ul className="space-y-1.5 text-xs font-mono text-slate-300">
-                    {dispute.moveout_evidence_urls.map((url, i) => (
-                      <li key={i} className="truncate bg-slate-950 p-2 rounded border border-slate-850">
-                        <a href={url} target="_blank" rel="noreferrer" className="text-purple-400 hover:underline flex items-center gap-1">
-                          🔗 {url}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-xs text-slate-400 italic">No move-out evidence submitted yet.</p>
-                )}
-              </div>
-            </div>
-
-            {/* Tenant Statement */}
-            <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-              <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-                Tenant Written Defense & Counter-Arguments
-              </h4>
-              <p className="text-xs text-slate-200 leading-relaxed italic bg-slate-950 p-3 rounded-lg border border-slate-800">
-                {dispute.tenant_statement || 'Awaiting tenant written statement...'}
-              </p>
-            </div>
-          </div>
+      {/* Case Header Banner */}
+      <div className="glass-card p-8 border-white/10 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+          <span className="text-xs font-mono font-bold text-[#e9c349] bg-[#e9c349]/10 px-3 py-1 rounded border border-[#e9c349]/20 uppercase tracking-widest">
+            Case #{dispute.id} Protocol
+          </span>
+          <h1 className="font-serif text-3xl font-bold text-white mt-2">
+            Security Deposit Arbitration Trial
+          </h1>
+          <p className="text-sm text-zinc-400 mt-1 max-w-xl">
+            GenLayer Intelligent Contract non-deterministic execution engine inspects move-in vs move-out web evidence and executes consensus payout.
+          </p>
         </div>
 
-        {/* Right Col: AI Arbitrator Panel & Consensus State */}
-        <div className="space-y-6">
-          <div className="glass-card p-6 border-slate-700/60 space-y-6">
-            <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
-              <div className="p-2.5 rounded-xl bg-purple-500/20 text-purple-400">
-                <BrainCircuit className="w-6 h-6" />
+        <div className="bg-[#1a1c1c] border border-[#e9c349]/30 p-5 rounded-xl flex items-center gap-4 glow-border-gold font-mono">
+          <span className="material-symbols-outlined text-[#e9c349] text-3xl">account_balance</span>
+          <div>
+            <div className="text-[10px] uppercase font-bold text-[#e9c349] tracking-wider">Escrowed Deposit</div>
+            <div className="text-2xl font-extrabold text-white">{dispute.deposit_amount} GEN</div>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Reasoning Protocol Feed */}
+      <div className="glass-card p-6 rounded-xl border-l-4 border-[#4ce337]">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="material-symbols-outlined text-[#4ce337]">psychology</span>
+          <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-[#4ce337]">
+            AI Reasoning Protocol v4.2 & Multi-Validator Feed
+          </h3>
+        </div>
+        <div className="font-mono text-xs text-[#4ce337]/90 space-y-1.5 bg-[#0c0f0f] p-4 rounded-lg border border-white/5">
+          <p>&gt; READ STATE: MOVE-IN EVIDENCE LINKS DETECTED ({dispute.movein_evidence_urls?.length || 0})...</p>
+          <p>&gt; READ STATE: MOVE-OUT EVIDENCE LINKS DETECTED ({dispute.moveout_evidence_urls?.length || 0})...</p>
+          {dispute.tenant_statement ? (
+            <p>&gt; TENANT DEFENSE STATEMENT LOADED: "{dispute.tenant_statement.substring(0, 70)}..."</p>
+          ) : (
+            <p className="text-amber-400">&gt; AWAITING TENANT COUNTER-EVIDENCE SUBMISSION...</p>
+          )}
+          {isClosed && (
+            <p className="text-emerald-400 font-bold">&gt; CONSENSUS REACHED: TENANT REFUND {dispute.tenant_refund_pct}% • CONFIDENCE {dispute.confidence}%</p>
+          )}
+        </div>
+      </div>
+
+      {/* Main Trial Details Grid: Evidence Bento */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Left: Landlord Evidence */}
+        <section className="glass-card p-6 border-white/10 space-y-5">
+          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <h3 className="font-serif text-xl font-bold text-white flex items-center gap-2">
+              <span className="material-symbols-outlined text-[#e9c349]">gavel</span> Landlord's Evidence
+            </h3>
+            <span className="text-[11px] font-mono text-zinc-400 bg-white/5 px-2.5 py-1 rounded">Move-in Gallery</span>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider">Web Evidence Links</h4>
+            <ul className="space-y-2 font-mono text-xs">
+              {dispute.movein_evidence_urls?.map((url, i) => (
+                <li key={i} className="bg-[#1a1c1c] p-3 rounded-lg border border-white/10 truncate">
+                  <a href={url} target="_blank" rel="noreferrer" className="text-[#e9c349] hover:underline flex items-center gap-2">
+                    <span className="material-symbols-outlined text-sm">link</span>
+                    <span className="truncate">{url}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* Right: Tenant Counter-Evidence */}
+        <section className="glass-card p-6 border-white/10 space-y-5">
+          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <h3 className="font-serif text-xl font-bold text-[#4ce337] flex items-center gap-2">
+              <span className="material-symbols-outlined text-[#4ce337]">upload_file</span> Tenant Counter-Evidence
+            </h3>
+            <span className="text-[11px] font-mono text-[#4ce337] bg-[#4ce337]/10 px-2.5 py-1 rounded border border-[#4ce337]/20">
+              Move-out Gallery
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider">Web Evidence Links</h4>
+            {dispute.moveout_evidence_urls?.length > 0 ? (
+              <ul className="space-y-2 font-mono text-xs">
+                {dispute.moveout_evidence_urls.map((url, i) => (
+                  <li key={i} className="bg-[#1a1c1c] p-3 rounded-lg border border-white/10 truncate">
+                    <a href={url} target="_blank" rel="noreferrer" className="text-[#4ce337] hover:underline flex items-center gap-2">
+                      <span className="material-symbols-outlined text-sm">link</span>
+                      <span className="truncate">{url}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-xs text-zinc-400 italic">No move-out evidence submitted yet.</p>
+            )}
+          </div>
+
+          <div className="space-y-2 pt-3 border-t border-white/10">
+            <h4 className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider">Tenant Final Statement</h4>
+            <p className="text-xs text-zinc-200 leading-relaxed italic bg-[#0c0f0f] p-3 rounded-lg border border-white/5">
+              {dispute.tenant_statement || 'Awaiting tenant written statement...'}
+            </p>
+          </div>
+        </section>
+      </div>
+
+      {/* AI Consensus Execution & Verdict Settlement Section */}
+      <div className="glass-card p-8 border-white/10 space-y-6">
+        {dispute.status === 'OPEN' && (
+          <div className="bg-[#e9c349]/10 p-5 rounded-xl border border-[#e9c349]/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-[#e9c349] text-2xl">info</span>
+              <p className="text-xs text-zinc-200">
+                Tenant move-out evidence must be attached before invoking the AI arbitration court.
+              </p>
+            </div>
+            <button onClick={() => onOpenSubmitEvidence(dispute)} className="btn-teal text-xs py-2.5 px-5">
+              Submit Tenant Evidence Now
+            </button>
+          </div>
+        )}
+
+        {dispute.status === 'AWAITING_VERDICT' && !isProcessing && (
+          <button onClick={handleRunVerdict} className="w-full btn-gold text-sm py-4 justify-center glow-border-gold">
+            <span className="material-symbols-outlined">gavel</span>
+            <span>Request GenLayer AI Verdict Consensus</span>
+          </button>
+        )}
+
+        {isProcessing && (
+          <div className="glow-border-teal p-6 rounded-2xl bg-[#0c0f0f] space-y-4 font-mono">
+            <div className="flex items-center gap-3 text-[#4ce337] font-bold text-sm">
+              <span className="material-symbols-outlined animate-spin">psychology</span>
+              <span>GenLayer Validator AI Multi-Consensus Execution...</span>
+            </div>
+            <div className="space-y-2 text-xs text-zinc-300">
+              <div className={`p-2.5 rounded flex items-center gap-2 ${consensusStep >= 1 ? 'bg-[#4ce337]/15 text-[#4ce337]' : 'text-zinc-500'}`}>
+                <span>1. Fetching move-in & move-out web evidence via gl.nondet.web.render</span>
               </div>
-              <div>
-                <h3 className="text-base font-bold text-white">GenLayer AI Courtroom</h3>
-                <p className="text-xs text-slate-400">Multi-Validator Consensus Engine</p>
+              <div className={`p-2.5 rounded flex items-center gap-2 ${consensusStep >= 2 ? 'bg-[#e9c349]/15 text-[#e9c349]' : 'text-zinc-500'}`}>
+                <span>2. Leader LLM prompt execution & JSON verdict parsing</span>
+              </div>
+              <div className={`p-2.5 rounded flex items-center gap-2 ${consensusStep >= 3 ? 'bg-[#4ce337]/15 text-[#4ce337]' : 'text-zinc-500'}`}>
+                <span>3. Validator checking ±5% tolerance & executing payout</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isClosed && (
+          <div className="space-y-6">
+            <div className="bg-[#1a1c1c] p-6 rounded-2xl border border-white/10 space-y-4">
+              <div className="flex justify-between items-center text-xs font-mono font-bold">
+                <span className="text-zinc-300 uppercase tracking-wider">Arbitration Settlement Split</span>
+                <span className="text-[#4ce337] bg-[#4ce337]/10 px-3 py-1 rounded border border-[#4ce337]/20">
+                  AI Confidence: {dispute.confidence}%
+                </span>
+              </div>
+
+              {/* Percentage Split Bar */}
+              <div className="h-6 bg-[#0c0f0f] rounded-lg overflow-hidden flex border border-white/10">
+                <div
+                  style={{ width: `${dispute.tenant_refund_pct}%` }}
+                  className="bg-gradient-to-r from-[#4ce337] to-emerald-400 flex items-center justify-center text-xs font-mono font-extrabold text-[#023900]"
+                >
+                  {dispute.tenant_refund_pct}% Tenant
+                </div>
+                <div
+                  style={{ width: `${100 - dispute.tenant_refund_pct}%` }}
+                  className="bg-gradient-to-r from-[#e9c349] to-amber-500 flex items-center justify-center text-xs font-mono font-extrabold text-[#3c2f00]"
+                >
+                  {100 - dispute.tenant_refund_pct}% Landlord
+                </div>
+              </div>
+
+              <div className="space-y-2 pt-3 border-t border-white/10">
+                <h5 className="font-mono text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-sm text-[#e9c349]">gavel</span> Official AI Arbitrator Reason
+                </h5>
+                <p className="text-zinc-200 text-xs leading-relaxed bg-[#0c0f0f] p-4 rounded-xl border border-white/5">
+                  {dispute.verdict_reason}
+                </p>
               </div>
             </div>
 
-            {/* Action Trigger Buttons based on Status */}
-            {dispute.status === 'OPEN' && (
-              <div className="space-y-3">
-                <p className="text-xs text-amber-300 bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
-                  Tenant move-out evidence must be attached before invoking the AI arbitration court.
+            {isAwaitingAppeal && (
+              <div className="bg-rose-950/30 p-6 rounded-2xl border border-rose-500/30 space-y-4">
+                <div className="flex items-center gap-2 text-rose-300 font-bold text-xs font-mono">
+                  <span className="material-symbols-outlined text-rose-400 text-base">warning</span> Low AI Confidence Escalation Triggered
+                </div>
+                <p className="text-xs text-rose-200/80">
+                  The AI confidence score ({dispute.confidence}%) is below 60%. Either landlord or tenant can invoke a secondary Chief AI Appeals round.
                 </p>
-                <button onClick={() => onOpenSubmitEvidence(dispute)} className="w-full btn-accent text-xs py-3 justify-center">
-                  Submit Tenant Evidence Now
+                <button onClick={handleRunAppeal} className="btn-gold text-xs py-3 px-6 justify-center">
+                  Trigger Chief AI Appeals Round
                 </button>
               </div>
             )}
-
-            {dispute.status === 'AWAITING_VERDICT' && !isProcessing && (
-              <button onClick={handleRunVerdict} className="w-full btn-primary text-sm py-3.5 justify-center shadow-lg shadow-cyan-500/25">
-                <Sparkles className="w-4 h-4" /> Request GenLayer AI Verdict
-              </button>
-            )}
-
-            {/* Consensus Multi-Validator Loading Animation */}
-            {isProcessing && (
-              <div className="ai-consensus-box p-5 rounded-2xl bg-cyan-950/40 space-y-4">
-                <div className="flex items-center gap-3 text-cyan-300 font-bold text-sm">
-                  <BrainCircuit className="w-5 h-5 animate-spin text-cyan-400" />
-                  <span>GenLayer Validator AI Consensus Running...</span>
-                </div>
-                <div className="space-y-2 text-xs font-mono text-slate-300">
-                  <div className={`p-2 rounded flex items-center gap-2 ${consensusStep >= 1 ? 'bg-cyan-900/40 text-cyan-200' : 'text-slate-500'}`}>
-                    <span>1. Rendering evidence URLs via gl.nondet.web.render</span>
-                  </div>
-                  <div className={`p-2 rounded flex items-center gap-2 ${consensusStep >= 2 ? 'bg-purple-900/40 text-purple-200' : 'text-slate-500'}`}>
-                    <span>2. Leader LLM prompt execution & JSON parsing</span>
-                  </div>
-                  <div className={`p-2 rounded flex items-center gap-2 ${consensusStep >= 3 ? 'bg-emerald-900/40 text-emerald-200' : 'text-slate-500'}`}>
-                    <span>3. Validator checking ±5% tolerance & finalizing state</span>
-                  </div>
-                </div>
-                <p className="text-[11px] text-slate-400 italic">
-                  *Unlike standard EVM smart contracts, GenLayer validators independently scrape web evidence and reach consensus on non-deterministic AI outputs.
-                </p>
-              </div>
-            )}
-
-            {/* Verdict Display Section */}
-            {isClosed && (
-              <div className="space-y-4">
-                <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-3">
-                  <div className="flex justify-between items-center text-xs font-bold">
-                    <span className="text-slate-300">Verdict Settlement Split</span>
-                    <span className="text-emerald-400 font-mono">Confidence: {dispute.confidence}%</span>
-                  </div>
-
-                  {/* Percentage Split Bar */}
-                  <div className="h-4 bg-slate-950 rounded-full overflow-hidden flex border border-slate-800">
-                    <div
-                      style={{ width: `${dispute.tenant_refund_pct}%` }}
-                      className="bg-gradient-to-r from-emerald-500 to-teal-400 flex items-center justify-center text-[10px] font-extrabold text-black"
-                    >
-                      {dispute.tenant_refund_pct}% Tenant
-                    </div>
-                    <div
-                      style={{ width: `${100 - dispute.tenant_refund_pct}%` }}
-                      className="bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-[10px] font-extrabold text-white"
-                    >
-                      {100 - dispute.tenant_refund_pct}% Landlord
-                    </div>
-                  </div>
-
-                  <div className="text-xs space-y-2 pt-2 border-t border-slate-800">
-                    <h5 className="font-semibold text-slate-300 flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-cyan-400" /> Official AI Arbitration Reasoning:
-                    </h5>
-                    <p className="text-slate-300 text-xs leading-relaxed bg-slate-950 p-3 rounded-lg border border-slate-850">
-                      {dispute.verdict_reason}
-                    </p>
-                  </div>
-                </div>
-
-                {isAwaitingAppeal && (
-                  <div className="bg-rose-950/40 p-4 rounded-xl border border-rose-500/30 space-y-3">
-                    <div className="flex items-center gap-2 text-rose-300 font-bold text-xs">
-                      <ShieldAlert className="w-4 h-4 text-rose-400" /> Low AI Confidence Escalation
-                    </div>
-                    <p className="text-xs text-rose-200/80">
-                      The confidence score ({dispute.confidence}%) fell below the 60% threshold. Either party may trigger a secondary Chief Appeals round.
-                    </p>
-                    <button onClick={handleRunAppeal} className="w-full btn-accent text-xs py-2.5 justify-center">
-                      Trigger Chief AI Appeals Round
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

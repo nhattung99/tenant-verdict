@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TenantVerdict | Submit Counter-Evidence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;family=Geist:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#1e2020",
+                    "primary-fixed": "#e2e2e8",
+                    "secondary-container": "#af8d11",
+                    "surface-container-high": "#282a2b",
+                    "on-secondary-fixed": "#241a00",
+                    "on-tertiary-fixed": "#012200",
+                    "on-error": "#690005",
+                    "on-primary": "#2f3035",
+                    "surface-container-highest": "#333535",
+                    "outline": "#909095",
+                    "on-tertiary-container": "#0c8e00",
+                    "on-primary-container": "#797a7f",
+                    "surface": "#121414",
+                    "primary-container": "#0a0c10",
+                    "surface-container-low": "#1a1c1c",
+                    "on-primary-fixed": "#1a1c20",
+                    "on-error-container": "#ffdad6",
+                    "surface-bright": "#38393a",
+                    "inverse-surface": "#e2e2e2",
+                    "outline-variant": "#45474b",
+                    "on-tertiary-fixed-variant": "#045300",
+                    "tertiary": "#4ce337",
+                    "primary": "#c6c6cc",
+                    "surface-container-lowest": "#0c0f0f",
+                    "surface-variant": "#333535",
+                    "primary-fixed-dim": "#c6c6cc",
+                    "tertiary-fixed": "#78ff5e",
+                    "on-background": "#e2e2e2",
+                    "on-tertiary": "#023900",
+                    "on-surface": "#e2e2e2",
+                    "surface-tint": "#c6c6cc",
+                    "secondary-fixed-dim": "#e9c349",
+                    "surface-dim": "#121414",
+                    "tertiary-fixed-dim": "#4ce337",
+                    "on-secondary-fixed-variant": "#574500",
+                    "on-secondary": "#3c2f00",
+                    "tertiary-container": "#001000",
+                    "error-container": "#93000a",
+                    "on-surface-variant": "#c6c6cb",
+                    "secondary": "#e9c349",
+                    "on-secondary-container": "#342800",
+                    "inverse-on-surface": "#2f3131",
+                    "error": "#ffb4ab",
+                    "on-primary-fixed-variant": "#45474b",
+                    "background": "#121414",
+                    "inverse-primary": "#5d5e63",
+                    "secondary-fixed": "#ffe088"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "gutter": "24px",
+                    "unit": "8px",
+                    "margin-mobile": "16px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "body-md": ["Inter"],
+                    "headline-md": ["Playfair Display"],
+                    "data-mono": ["Geist"],
+                    "body-lg": ["Inter"],
+                    "display-lg-mobile": ["Playfair Display"],
+                    "headline-sm": ["Playfair Display"],
+                    "label-caps": ["Inter"],
+                    "display-lg": ["Playfair Display"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "data-mono": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-border-teal {
+            border: 1px solid #20C20E;
+            box-shadow: 0 0 10px rgba(32, 194, 14, 0.2);
+        }
+        .glow-border-gold {
+            border: 1px solid #D4AF37;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+        .justice-watermark {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            opacity: 0.05;
+            pointer-events: none;
+            font-size: 80px;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-bottom: 1px solid #D4AF37;
+            box-shadow: 0 4px 12px -2px rgba(212, 175, 55, 0.2);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface/80 backdrop-blur-xl text-primary font-body-md text-body-md w-full sticky top-0 z-50 border-b border-white/10 shadow-2xl">
+<div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="font-headline-sm text-headline-sm text-primary tracking-tight">TenantVerdict</div>
+<nav class="hidden md:flex gap-gutter items-center">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-secondary border-b-2 border-secondary pb-1" href="#">My Disputes</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Profile</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 bg-secondary text-on-secondary px-4 py-2 rounded-lg font-bold active:scale-95 duration-200 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span>Connect Wallet</span>
+</button>
+</div>
+</div>
+</header>
+<div class="flex">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container/60 backdrop-blur-lg border-r border-white/10 shadow-lg flex flex-col p-unit gap-4 pt-24 hidden lg:flex">
+<div class="px-4 mb-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">gavel</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-secondary">Case Officer</div>
+<div class="text-xs text-on-surface-variant">Verified Legal Node</div>
+</div>
+</div>
+</div>
+<nav class="flex flex-col gap-2 px-2">
+<div class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 rounded-lg transition-all cursor-pointer">
+<span class="material-symbols-outlined">gavel</span>
+<span class="font-label-caps text-label-caps uppercase">Overview</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-xl font-bold cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder_open</span>
+<span class="font-label-caps text-label-caps uppercase">Disputes</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 rounded-lg transition-all cursor-pointer">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-caps text-label-caps uppercase">Evidence</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 rounded-lg transition-all cursor-pointer">
+<span class="material-symbols-outlined">balance</span>
+<span class="font-label-caps text-label-caps uppercase">Verdict</span>
+</div>
+</nav>
+<div class="mt-auto flex flex-col gap-2 px-2 pb-8">
+<div class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 rounded-lg transition-all cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps uppercase">Settings</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 rounded-lg transition-all cursor-pointer">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-label-caps text-label-caps uppercase">Support</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 lg:ml-64 px-margin-mobile md:px-margin-desktop py-12 max-w-container-max mx-auto w-full">
+<!-- Context Header & Countdown -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+<div>
+<h1 class="font-headline-md text-headline-md text-primary mb-2">Case #8829-X</h1>
+<p class="text-on-surface-variant max-w-xl">Submit your counter-evidence for the security deposit dispute at 742 Evergreen Terrace. Ensure all timestamps are visible.</p>
+</div>
+<div class="bg-error-container/20 border border-error/30 p-6 rounded-xl flex items-center gap-4 glow-border-gold">
+<span class="material-symbols-outlined text-secondary text-4xl" style="font-variation-settings: 'FILL' 1;">timer</span>
+<div>
+<div class="font-label-caps text-label-caps text-secondary mb-1">Submission Deadline</div>
+<div class="font-data-mono text-2xl tracking-widest text-on-surface">48h 12m <span class="animate-pulse">_</span></div>
+</div>
+</div>
+</div>
+<!-- AI Reasoning Feed (Minimalist integration) -->
+<div class="mb-12 glass-card p-6 rounded-xl border-l-4 border-tertiary">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-tertiary">psychology</span>
+<h3 class="font-label-caps text-label-caps text-tertiary">AI Reasoning Protocol v4.2</h3>
+</div>
+<div class="font-data-mono text-xs text-tertiary/80 space-y-1">
+<p>&gt; ANALYZING LANDLORD SUBMISSION: 12 IMAGES DETECTED...</p>
+<p>&gt; CROSS-REFERENCING METADATA WITH MOVE-IN DATE: 2023-01-15...</p>
+<p>&gt; STANDBY FOR TENANT INPUT COMPARISON...</p>
+<p class="animate-pulse">&gt; WAITING FOR UPLOAD...</p>
+</div>
+</div>
+<!-- Evidence Comparison Bento -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+<!-- Left: Landlord Move-in (Read-only) -->
+<section class="flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-primary">Landlord's Evidence</h2>
+<span class="font-label-caps text-label-caps text-on-surface-variant bg-white/5 px-3 py-1 rounded">Move-in Gallery</span>
+</div>
+<div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+<span class="material-symbols-outlined justice-watermark">scale</span>
+<div class="grid grid-cols-2 gap-4">
+<div class="aspect-square rounded-xl overflow-hidden group cursor-zoom-in relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A high-resolution professional architectural photograph of a pristine, empty living room with polished hardwood floors and freshly painted white walls. Soft daylight streams through a large window, highlighting the flawless condition of the property. The aesthetic is clean, clinical, and high-contrast, fitting a legal digital justice platform. Deep charcoal shadows define the corners of the room." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRdua70Z9Fyfq2PDiPPZh2bCEo-bwM2YQ8Sp3KOSlQwYR4aDzSCj7kaOi_WZUoHov-o2F-onsiFdA4bTB1fgfckhKGfsJkGWAGudPnzw3vHzxHug9MQBqOhuiFRIoRZLeR2iG59eyFt34ZNLN-9NubmutSKdV8aC8RFZHoLQfejIvXW2GCQ17EhtUqiQ3BwJ-tt4kWl9GS4bzJKnYv-smyvuUG1hwBh5qvoW8NTuOihFxFm8kEk8RH"/>
+<div class="absolute bottom-2 left-2 bg-black/60 px-2 py-1 rounded text-[10px] font-data-mono text-white">JAN 15, 2023</div>
+</div>
+<div class="aspect-square rounded-xl overflow-hidden group cursor-zoom-in relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A detailed close-up shot of a kitchen countertop made of dark grey quartz, showing a completely smooth and scratch-free surface. Beside it, a stainless steel sink shines under bright overhead LED lighting. The image is crisp and sharp, emphasizing the absence of damage. The mood is professional and evidentiary, with a cool blue-grey color palette." src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<div class="absolute bottom-2 left-2 bg-black/60 px-2 py-1 rounded text-[10px] font-data-mono text-white">JAN 15, 2023</div>
+</div>
+<div class="aspect-square rounded-xl overflow-hidden group cursor-zoom-in relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Macro photography of a carpeted floor in a bedroom, showing thick, clean beige fibers with no visible stains or wear. The lighting is even and soft, showcasing the well-maintained state of the flooring. The visual style is focused and technical, with high contrast between the carpet texture and the surrounding baseboards." src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<div class="absolute bottom-2 left-2 bg-black/60 px-2 py-1 rounded text-[10px] font-data-mono text-white">JAN 15, 2023</div>
+</div>
+<div class="aspect-square rounded-xl overflow-hidden group cursor-zoom-in relative flex items-center justify-center bg-white/5 border border-dashed border-white/20">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant">grid_view</span>
+<span class="absolute bottom-2 right-2 font-label-caps text-[10px] text-on-surface-variant">+9 MORE</span>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-white/10">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-2">LANDLORD STATEMENT</p>
+<p class="text-body-md italic text-on-primary-container">"The property was professionally cleaned and floors were refinished prior to tenant occupancy. No pre-existing damage was recorded in the entry report."</p>
+</div>
+</div>
+</section>
+<!-- Right: Tenant Move-out (Upload) -->
+<section class="flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-secondary">Your Counter-Evidence</h2>
+<span class="font-label-caps text-label-caps text-secondary bg-secondary-container/20 px-3 py-1 rounded">Move-out Gallery</span>
+</div>
+<div class="glass-card rounded-2xl p-6 border-secondary/20 flex flex-col gap-6 h-full">
+<!-- Upload Zone -->
+<div class="border-2 border-dashed border-white/10 rounded-2xl p-10 flex flex-col items-center justify-center text-center hover:border-secondary transition-colors cursor-pointer group bg-surface-container-low/30">
+<div class="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-secondary text-3xl">upload_file</span>
+</div>
+<p class="font-body-lg text-body-lg text-primary mb-1">Drag &amp; Drop Move-out Evidence</p>
+<p class="text-on-surface-variant text-sm">PNG, JPG or HEIC (Max 20MB per file)</p>
+<button class="mt-6 px-6 py-2 border border-secondary text-secondary rounded-lg font-label-caps text-label-caps hover:bg-secondary hover:text-on-secondary transition-all">Browse Files</button>
+</div>
+<!-- Statement Area -->
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Your Final Statement</label>
+<textarea class="w-full bg-transparent border-0 border-b border-white/10 py-3 px-0 text-body-md text-on-surface min-h-[160px] resize-none focus:ring-0 placeholder:text-on-surface-variant/30" placeholder="Detail any discrepancies between the landlord's photos and the current state..."></textarea>
+</div>
+<!-- Checkbox Logic -->
+<div class="flex items-start gap-3 mt-4">
+<input class="mt-1 rounded bg-surface border-white/10 text-secondary focus:ring-secondary" id="verify" type="checkbox"/>
+<label class="text-sm text-on-surface-variant" for="verify">I certify that these images are unedited and were captured at the time of lease termination. Metadata is intact for blockchain verification.</label>
+</div>
+</div>
+</section>
+</div>
+<!-- Fixed Footer Actions -->
+<div class="mt-12 flex flex-col md:flex-row justify-end items-center gap-gutter">
+<button class="w-full md:w-auto px-10 py-4 text-on-surface-variant hover:text-primary transition-all font-label-caps text-label-caps flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">save</span>
+                    Save as Draft
+                </button>
+<button class="w-full md:w-auto bg-secondary text-on-secondary px-12 py-4 rounded-lg font-bold text-lg shadow-xl hover:shadow-secondary/20 active:scale-95 transition-all flex items-center justify-center gap-3 glow-border-gold">
+                    Submit Evidence
+                    <span class="material-symbols-outlined">gavel</span>
+</button>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest w-full py-12 border-t border-white/5 mt-20">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop gap-gutter max-w-container-max mx-auto">
+<div class="flex flex-col gap-2">
+<div class="font-headline-sm text-headline-sm text-primary">TenantVerdict</div>
+<p class="font-body-md text-body-md text-on-surface-variant opacity-60">© 2024 TenantVerdict. Powered by GenLayer.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-on-surface-variant hover:text-primary hover:underline decoration-secondary transition-opacity" href="#">Blockchain Explorer</a>
+<a class="text-on-surface-variant hover:text-primary hover:underline decoration-secondary transition-opacity" href="#">Smart Contracts</a>
+<a class="text-on-surface-variant hover:text-primary hover:underline decoration-secondary transition-opacity" href="#">Legal Framework</a>
+<a class="text-on-surface-variant hover:text-primary hover:underline decoration-secondary transition-opacity" href="#">Terms</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for the countdown
+        const deadline = new Date();
+        deadline.setHours(deadline.getHours() + 48);
+        deadline.setMinutes(deadline.getMinutes() + 12);
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = deadline - now;
+            
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            // This is just a visual placeholder for the static prompt requirement
+            // But demonstrates real-time capability if needed.
+        }
+
+        // Add subtle hover effect to cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body>
+</html>

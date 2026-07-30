@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TenantVerdict | Connect Wallet</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,600&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gold-glow {
+            box-shadow: 0 0 20px rgba(233, 195, 73, 0.15);
+        }
+        .logic-border {
+            border: 1px solid #20C20E;
+        }
+        @keyframes orbit {
+            0% { transform: rotate(0deg) translateX(12px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(12px) rotate(-360deg); }
+        }
+        .loading-dot {
+            animation: orbit 2s linear infinite;
+        }
+        .loading-dot:nth-child(2) { animation-delay: -0.66s; }
+        .loading-dot:nth-child(3) { animation-delay: -1.33s; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#1e2020",
+                      "primary-fixed": "#e2e2e8",
+                      "secondary-container": "#af8d11",
+                      "surface-container-high": "#282a2b",
+                      "on-secondary-fixed": "#241a00",
+                      "on-tertiary-fixed": "#012200",
+                      "on-error": "#690005",
+                      "on-primary": "#2f3035",
+                      "surface-container-highest": "#333535",
+                      "outline": "#909095",
+                      "on-tertiary-container": "#0c8e00",
+                      "on-primary-container": "#797a7f",
+                      "surface": "#121414",
+                      "primary-container": "#0a0c10",
+                      "surface-container-low": "#1a1c1c",
+                      "on-primary-fixed": "#1a1c20",
+                      "on-error-container": "#ffdad6",
+                      "surface-bright": "#38393a",
+                      "inverse-surface": "#e2e2e2",
+                      "outline-variant": "#45474b",
+                      "on-tertiary-fixed-variant": "#045300",
+                      "tertiary": "#4ce337",
+                      "primary": "#c6c6cc",
+                      "surface-container-lowest": "#0c0f0f",
+                      "surface-variant": "#333535",
+                      "primary-fixed-dim": "#c6c6cc",
+                      "tertiary-fixed": "#78ff5e",
+                      "on-background": "#e2e2e2",
+                      "on-tertiary": "#023900",
+                      "on-surface": "#e2e2e2",
+                      "surface-tint": "#c6c6cc",
+                      "secondary-fixed-dim": "#e9c349",
+                      "surface-dim": "#121414",
+                      "tertiary-fixed-dim": "#4ce337",
+                      "on-secondary-fixed-variant": "#574500",
+                      "on-secondary": "#3c2f00",
+                      "tertiary-container": "#001000",
+                      "error-container": "#93000a",
+                      "on-surface-variant": "#c6c6cb",
+                      "secondary": "#e9c349",
+                      "on-secondary-container": "#342800",
+                      "inverse-on-surface": "#2f3131",
+                      "error": "#ffb4ab",
+                      "on-primary-fixed-variant": "#45474b",
+                      "background": "#121414",
+                      "inverse-primary": "#5d5e63",
+                      "secondary-fixed": "#ffe088"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "gutter": "24px",
+                      "unit": "8px",
+                      "margin-mobile": "16px",
+                      "container-max": "1280px"
+              },
+              "fontFamily": {
+                      "body-md": ["Inter"],
+                      "headline-md": ["Playfair Display"],
+                      "data-mono": ["Geist"],
+                      "body-lg": ["Inter"],
+                      "display-lg-mobile": ["Playfair Display"],
+                      "headline-sm": ["Playfair Display"],
+                      "label-caps": ["Inter"],
+                      "display-lg": ["Playfair Display"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "data-mono": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-secondary/30">
+<!-- Blurred Landing Page Background (Simulated) -->
+<div aria-hidden="true" class="fixed inset-0 z-0 overflow-hidden opacity-40 blur-2xl pointer-events-none">
+<div class="absolute top-[10%] left-[20%] w-[40rem] h-[40rem] bg-secondary-container/20 rounded-full"></div>
+<div class="absolute bottom-[20%] right-[10%] w-[30rem] h-[30rem] bg-tertiary/10 rounded-full"></div>
+<main class="max-w-container-max mx-auto px-margin-desktop py-20 flex flex-col gap-20">
+<div class="h-24 w-3/4 bg-white/5 rounded-xl"></div>
+<div class="grid grid-cols-3 gap-8">
+<div class="h-64 bg-white/5 rounded-xl"></div>
+<div class="h-64 bg-white/5 rounded-xl"></div>
+<div class="h-64 bg-white/5 rounded-xl"></div>
+</div>
+<div class="h-96 w-full bg-white/5 rounded-xl"></div>
+</main>
+</div>
+<!-- Modal Backdrop -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-margin-mobile">
+<!-- Main Wallet Connect Modal -->
+<div class="relative w-full max-w-md glass-morphism rounded-xl p-8 flex flex-col gap-8 shadow-2xl overflow-hidden">
+<!-- Close Button -->
+<button class="absolute top-6 right-6 text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+<!-- Header -->
+<div class="text-center flex flex-col gap-2">
+<h2 class="font-headline-md text-headline-md text-primary tracking-tight">Connect Wallet</h2>
+<p class="text-on-surface-variant text-body-md">Choose your digital gateway to justice.</p>
+</div>
+<!-- Wallet List -->
+<div class="flex flex-col gap-3">
+<!-- MetaMask Primary Button -->
+<button class="group flex items-center justify-between p-4 bg-secondary rounded-lg transition-all active:scale-[0.98] gold-glow">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-black/10 rounded flex items-center justify-center">
+<!-- Metamask Icon Placeholder -->
+<img class="w-8 h-8 object-contain" data-alt="A highly detailed 3D illustration of the MetaMask fox head logo, rendered with metallic orange facets and glowing white eyes. The style is sleek and premium, set against a dark charcoal background with soft gold rim lighting to emphasize its sharp, geometric form." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYcYSFLOqNPn8vX9BYtDU1ifWJ81Q33GeMbMqav7tack3ns2RKQEAxGgkUAVXotbk8Ohse3IyA7o9GrqJX2MBrtyTfORvCKqHm4CtZI4bdAsGs8qorIO8lyd8QLaGLvodSALcsJPiptyjL-Si1c16yUYqz-0Vp7_qaxeSOpAbqyqQYkMZPK1st2MDF5AQSCTvTy8OqGxneccsyrd4l_zhLHkmV-z6AZAilMTZbxoxE23hsgxFF32zv"/>
+</div>
+<span class="font-bold text-black font-body-lg">MetaMask</span>
+</div>
+<span class="material-symbols-outlined text-black group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<!-- Other Options (Secondary) -->
+<button class="flex items-center justify-between p-4 glass-morphism rounded-lg hover:bg-white/10 transition-all active:scale-[0.98] border-white/5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-white/5 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-weight="fill">account_balance_wallet</span>
+</div>
+<span class="font-medium text-on-surface">WalletConnect</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+<button class="flex items-center justify-between p-4 glass-morphism rounded-lg hover:bg-white/10 transition-all active:scale-[0.98] border-white/5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-white/5 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">shield</span>
+</div>
+<span class="font-medium text-on-surface">Coinbase Wallet</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+</div>
+<!-- Network Switching State -->
+<div class="logic-border rounded-lg p-4 bg-surface-container-low/50 flex flex-col gap-4 items-center justify-center relative overflow-hidden">
+<div class="flex items-center gap-4">
+<!-- Subtle Gold Loading Animation -->
+<div class="relative w-8 h-8">
+<div class="loading-dot absolute inset-0 w-2 h-2 bg-secondary rounded-full"></div>
+<div class="loading-dot absolute inset-0 w-2 h-2 bg-secondary/60 rounded-full"></div>
+<div class="loading-dot absolute inset-0 w-2 h-2 bg-secondary/30 rounded-full"></div>
+</div>
+<span class="text-secondary font-data-mono text-data-mono uppercase tracking-widest">Switching to Studionet...</span>
+</div>
+<div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-2/3 animate-[shimmer_2s_infinite]"></div>
+</div>
+</div>
+<!-- AI Reasoning Sidebar (Minimalist Embedded) -->
+<div class="flex flex-col gap-2 p-4 bg-black/20 rounded border-l-2 border-tertiary">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-[14px]">terminal</span>
+<span class="font-label-caps text-label-caps text-tertiary uppercase">AI Verification</span>
+</div>
+<p class="font-data-mono text-[11px] text-on-tertiary-fixed-variant leading-relaxed opacity-80">
+                    &gt; Validating node connection...<br/>
+                    &gt; Checking wallet state on Studionet chain...<br/>
+                    &gt; Finalizing legal handshake protocol...
+                </p>
+</div>
+<!-- Legal Disclaimer -->
+<div class="text-center px-4">
+<p class="text-[11px] text-on-surface-variant/60 leading-relaxed font-body-md italic">
+                    By connecting, you agree to the decentralized arbitration framework and recognize the GenLayer AI Oracle as a binding arbitrator for dispute resolution.
+                </p>
+</div>
+<!-- Visual Motif (Justice Scale Watermark) -->
+<div class="absolute -bottom-8 -right-8 opacity-[0.03] pointer-events-none transform rotate-12">
+<span class="material-symbols-outlined text-[160px]">balance</span>
+</div>
+</div>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.addEventListener('mouseenter', () => {
+                    // Subtle hover logic if needed beyond tailwind
+                });
+            });
+        });
+    </script>
+<style>
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+    </style>
+</body></html>

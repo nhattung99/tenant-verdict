@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { X, Scale, Plus, Trash2, ShieldCheck, DollarSign } from 'lucide-react';
 
 export default function CreateDisputeModal({ isOpen, onClose, onSubmit, account }) {
   const [tenantAddress, setTenantAddress] = useState('0x70997970C51812dc3A010C7d01b50e0d17dc79C8');
@@ -49,42 +48,46 @@ export default function CreateDisputeModal({ isOpen, onClose, onSubmit, account 
 
   return (
     <div className="modal-overlay">
-      <div className="glass-card modal-content p-6 border-slate-700/60 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
+      <div className="glass-card modal-content p-8 border-white/10 shadow-2xl relative">
+        <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-cyan-500/20 text-cyan-400">
-              <Scale className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-[#e9c349]/20 text-[#e9c349] border border-[#e9c349]/30 flex items-center justify-center">
+              <span className="material-symbols-outlined text-2xl">scale</span>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white">File Security Deposit Dispute</h3>
-              <p className="text-xs text-slate-400">Landlord Portal — Escrow Deposit & Register Move-in Evidence</p>
+              <h3 className="font-serif text-xl font-bold text-white">File Security Deposit Dispute</h3>
+              <p className="text-xs text-zinc-400 font-mono">Landlord Portal • Register Move-In Web Evidence & Escrow GEN</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-white p-1 rounded-lg">
-            <X className="w-5 h-5" />
+          <button onClick={onClose} className="text-zinc-400 hover:text-white p-1 rounded-lg">
+            <span className="material-symbols-outlined">close</span>
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="input-group">
-            <label className="input-label">Tenant Wallet Address</label>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <label className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
+              Tenant Wallet Address
+            </label>
             <input
               type="text"
               value={tenantAddress}
               onChange={(e) => setTenantAddress(e.target.value)}
               placeholder="0x..."
-              className="input-field font-mono text-sm"
+              className="input-field-dark w-full text-xs font-mono"
               required
             />
           </div>
 
-          <div className="input-group">
-            <label className="input-label flex items-center justify-between">
-              <span>Security Deposit Amount (GEN)</span>
-              <span className="text-xs text-amber-400 font-mono flex items-center gap-1">
-                <DollarSign className="w-3 h-3" /> Will be escrowed to Treasury
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
+                Security Deposit Amount (GEN)
+              </label>
+              <span className="text-[11px] text-[#e9c349] font-mono flex items-center gap-1">
+                <span className="material-symbols-outlined text-xs">monetization_on</span> Escrowed into Treasury
               </span>
-            </label>
+            </div>
             <input
               type="number"
               step="0.01"
@@ -92,20 +95,22 @@ export default function CreateDisputeModal({ isOpen, onClose, onSubmit, account 
               value={depositAmount}
               onChange={(e) => setDepositAmount(e.target.value)}
               placeholder="1.5"
-              className="input-field font-mono text-sm"
+              className="input-field-dark w-full text-xs font-mono"
               required
             />
           </div>
 
-          <div className="input-group">
+          <div className="space-y-2">
             <div className="flex items-center justify-between mb-1">
-              <label className="input-label">Move-In Condition Web Evidence URLs</label>
+              <label className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
+                Move-In Condition Web Evidence URLs
+              </label>
               <button
                 type="button"
                 onClick={handleAddUrl}
-                className="text-xs text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1"
+                className="text-xs text-[#e9c349] hover:underline font-bold flex items-center gap-1"
               >
-                <Plus className="w-3.5 h-3.5" /> Add Link
+                + Add Link
               </button>
             </div>
             {urls.map((url, idx) => (
@@ -115,7 +120,7 @@ export default function CreateDisputeModal({ isOpen, onClose, onSubmit, account 
                   value={url}
                   onChange={(e) => handleUrlChange(idx, e.target.value)}
                   placeholder="https://..."
-                  className="input-field text-xs font-mono flex-1"
+                  className="input-field-dark text-xs font-mono flex-1"
                   required
                 />
                 {urls.length > 1 && (
@@ -124,24 +129,24 @@ export default function CreateDisputeModal({ isOpen, onClose, onSubmit, account 
                     onClick={() => handleRemoveUrl(idx)}
                     className="p-2 text-rose-400 hover:bg-rose-500/10 rounded-lg"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <span className="material-symbols-outlined text-sm">delete</span>
                   </button>
                 )}
               </div>
             ))}
-            <p className="text-[11px] text-slate-400 italic">
+            <p className="text-[11px] text-zinc-400 italic">
               Provide publicly accessible image/report URLs (e.g. GitHub/Imgur) for AI Web rendering.
             </p>
           </div>
 
-          <div className="pt-4 border-t border-slate-800 flex justify-end gap-3">
-            <button type="button" onClick={onClose} className="btn-secondary text-xs py-2.5 px-4">
+          <div className="pt-5 border-t border-white/10 flex justify-end gap-3">
+            <button type="button" onClick={onClose} className="btn-outline text-xs py-2.5 px-4">
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="btn-primary text-xs py-2.5 px-5 disabled:opacity-50"
+              className="btn-gold text-xs py-2.5 px-5 disabled:opacity-50"
             >
               {isSubmitting ? 'Escrowing Deposit...' : 'Confirm Escrow & Open Dispute'}
             </button>

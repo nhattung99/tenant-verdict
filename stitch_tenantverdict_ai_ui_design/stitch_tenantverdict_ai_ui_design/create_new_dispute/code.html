@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Dispute | TenantVerdict</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;family=Geist:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .active-glow {
+            border-color: #e9c349;
+            box-shadow: 0 0 15px rgba(233, 195, 73, 0.2);
+        }
+        .ai-reasoning-border {
+            border-left: 2px solid #20C20E;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0c0f0f; }
+        ::-webkit-scrollbar-thumb { background: #333535; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #45474b; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#1e2020",
+                      "primary-fixed": "#e2e2e8",
+                      "secondary-container": "#af8d11",
+                      "surface-container-high": "#282a2b",
+                      "on-secondary-fixed": "#241a00",
+                      "on-tertiary-fixed": "#012200",
+                      "on-error": "#690005",
+                      "on-primary": "#2f3035",
+                      "surface-container-highest": "#333535",
+                      "outline": "#909095",
+                      "on-tertiary-container": "#0c8e00",
+                      "on-primary-container": "#797a7f",
+                      "surface": "#121414",
+                      "primary-container": "#0a0c10",
+                      "surface-container-low": "#1a1c1c",
+                      "on-primary-fixed": "#1a1c20",
+                      "on-error-container": "#ffdad6",
+                      "surface-bright": "#38393a",
+                      "inverse-surface": "#e2e2e2",
+                      "outline-variant": "#45474b",
+                      "on-tertiary-fixed-variant": "#045300",
+                      "tertiary": "#4ce337",
+                      "primary": "#c6c6cc",
+                      "surface-container-lowest": "#0c0f0f",
+                      "surface-variant": "#333535",
+                      "primary-fixed-dim": "#c6c6cc",
+                      "tertiary-fixed": "#78ff5e",
+                      "on-background": "#e2e2e2",
+                      "on-tertiary": "#023900",
+                      "on-surface": "#e2e2e2",
+                      "surface-tint": "#c6c6cc",
+                      "secondary-fixed-dim": "#e9c349",
+                      "surface-dim": "#121414",
+                      "tertiary-fixed-dim": "#4ce337",
+                      "on-secondary-fixed-variant": "#574500",
+                      "on-secondary": "#3c2f00",
+                      "tertiary-container": "#001000",
+                      "error-container": "#93000a",
+                      "on-surface-variant": "#c6c6cb",
+                      "secondary": "#e9c349",
+                      "on-secondary-container": "#342800",
+                      "inverse-on-surface": "#2f3131",
+                      "error": "#ffb4ab",
+                      "on-primary-fixed-variant": "#45474b",
+                      "background": "#121414",
+                      "inverse-primary": "#5d5e63",
+                      "secondary-fixed": "#ffe088"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "gutter": "24px",
+                      "unit": "8px",
+                      "margin-mobile": "16px",
+                      "container-max": "1280px"
+              },
+              "fontFamily": {
+                      "body-md": ["Inter"],
+                      "headline-md": ["Playfair Display"],
+                      "data-mono": ["Geist"],
+                      "body-lg": ["Inter"],
+                      "display-lg-mobile": ["Playfair Display"],
+                      "headline-sm": ["Playfair Display"],
+                      "label-caps": ["Inter"],
+                      "display-lg": ["Playfair Display"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "data-mono": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-surface text-on-surface min-h-screen selection:bg-secondary/30">
+<!-- Top Navigation Bar -->
+<nav class="bg-surface/80 backdrop-blur-xl border-b border-white/10 w-full sticky top-0 z-50 shadow-2xl">
+<div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="font-headline-sm text-primary tracking-tight">TenantVerdict</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Dashboard</a>
+<a class="text-secondary border-b-2 border-secondary pb-1 font-body-md text-body-md" href="#">My Disputes</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Profile</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 bg-secondary text-on-secondary px-6 py-2 rounded-xl font-bold active:scale-95 duration-200 transition-all">
+<span class="material-symbols-outlined text-sm">account_balance_wallet</span>
+<span>Connect Wallet</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="max-w-container-max mx-auto px-margin-desktop py-12 flex flex-col md:flex-row gap-gutter">
+<!-- Left Column: Creation Flow -->
+<div class="flex-1 space-y-12">
+<!-- Stepper -->
+<header class="space-y-6">
+<h1 class="font-headline-md text-headline-md text-primary">Initiate New Dispute</h1>
+<div class="flex items-center w-full max-w-3xl">
+<!-- Step 1 -->
+<div class="flex flex-col items-center flex-1 relative">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold mb-2">1</div>
+<span class="font-label-caps text-label-caps text-primary">Basic Info</span>
+<div class="absolute top-4 left-[60%] w-full h-[1px] bg-secondary/30"></div>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center flex-1 relative">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold mb-2">2</div>
+<span class="font-label-caps text-label-caps text-primary">Deposit Amount</span>
+<div class="absolute top-4 left-[60%] w-full h-[1px] bg-secondary/30"></div>
+</div>
+<!-- Step 3 (Active) -->
+<div class="flex flex-col items-center flex-1 relative">
+<div class="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold mb-2 shadow-[0_0_15px_rgba(233,195,73,0.4)]">3</div>
+<span class="font-label-caps text-label-caps text-secondary">Evidence</span>
+<div class="absolute top-4 left-[60%] w-full h-[1px] bg-white/10"></div>
+</div>
+<!-- Step 4 -->
+<div class="flex flex-col items-center flex-1">
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-white/10 text-on-surface-variant flex items-center justify-center font-bold mb-2">4</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Review</span>
+</div>
+</div>
+</header>
+<!-- Evidence Upload Section -->
+<section class="glass-card p-8 rounded-xl space-y-8 active-glow">
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-secondary">Upload Evidence</h2>
+<p class="text-on-surface-variant font-body-md text-body-md mt-1">Please provide clear photographic evidence of property condition.</p>
+</div>
+<span class="font-data-mono text-data-mono text-tertiary">MAX 50MB</span>
+</div>
+<!-- Drag & Drop Area -->
+<div class="border-2 border-dashed border-white/10 rounded-xl p-12 flex flex-col items-center justify-center group hover:border-secondary transition-all cursor-pointer bg-white/5">
+<span class="material-symbols-outlined text-4xl text-secondary mb-4 group-hover:scale-110 transition-transform">cloud_upload</span>
+<p class="font-body-lg text-body-lg text-on-surface">Drag and drop images or videos here</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-2">JPEG, PNG, MP4 supported</p>
+<button class="mt-6 border border-secondary text-secondary px-6 py-2 rounded-lg font-bold hover:bg-secondary hover:text-on-secondary transition-all">Browse Files</button>
+</div>
+<!-- Evidence Gallery -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Photo 1 -->
+<div class="relative aspect-square rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover" data-alt="A professional high-resolution photograph of a damaged kitchen countertop in a modern luxury apartment, showing visible cracks and water stains under neutral indoor lighting. The style is documentary and clinical, maintaining a dark-mode aesthetic with charcoal shadows and silver highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9X0JLCubH2pwDXxz_M__XlVMHJrJAST2INFzOe8OcORapOdpObh9XlzlXt-X99-6CNektYFbGMEcnG84QGiQsd9Gq2JeYaA7wJtDHztOMox3cnLcI7hhGpSqQ-43QNV8n5aYyATl_OxgwG-8cYHBu5O_4NzxSVqpvzw4UnRbrZuhXkJzWeTinwvs8snsz4y0FhXsqXeRH0uAFNDYqe0q_9ZTNxA1Tgh_PapqTKpCKWINAGfIHK_lE"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+<button class="p-2 bg-error text-on-error rounded-full"><span class="material-symbols-outlined text-sm">delete</span></button>
+<button class="p-2 bg-white/20 text-white rounded-full"><span class="material-symbols-outlined text-sm">visibility</span></button>
+</div>
+</div>
+<!-- Photo 2 -->
+<div class="relative aspect-square rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover" data-alt="A macro close-up of broken floor tiles in a hallway, featuring sharp details and harsh directional lighting that emphasizes the depth of the cracks. The color palette is muted with deep blacks and steel greys, consistent with a high-end legal dispute interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKwT5WCQo9NW3-ceurpLUcQ2pNJBfgh5HFGbJ_krPgijuCRe4z4xSKP9NK_S-m0Z0MmbRZpSAHAnOSSS7S3Hd6uYChilGn9JMcQD_pO9RPF91CBtuPEAyC8TICrHVCRiZ8MmxzqCPCf8IvUmyluVjNLcJ2N-h-TF5RTYHA6Lipp8k2brJhYoG5o_hZgiCx3YzP4FvOa02CoyfixgpW0JkjwKWzlH7RBdBYWIyAW9DSIuju5lKvDxhN"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+<button class="p-2 bg-error text-on-error rounded-full"><span class="material-symbols-outlined text-sm">delete</span></button>
+<button class="p-2 bg-white/20 text-white rounded-full"><span class="material-symbols-outlined text-sm">visibility</span></button>
+</div>
+</div>
+<!-- Empty Slot -->
+<div class="aspect-square rounded-lg border border-white/5 bg-white/2 flex items-center justify-center">
+<span class="material-symbols-outlined text-white/20">add_photo_alternate</span>
+</div>
+<!-- Empty Slot -->
+<div class="aspect-square rounded-lg border border-white/5 bg-white/2 flex items-center justify-center">
+<span class="material-symbols-outlined text-white/20">add_photo_alternate</span>
+</div>
+</div>
+</section>
+<!-- Navigation Controls -->
+<div class="flex justify-between items-center pt-8">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-all font-bold">
+<span class="material-symbols-outlined">arrow_back</span>
+                    Back to Deposit
+                </button>
+<button class="bg-secondary text-on-secondary px-8 py-3 rounded-xl font-bold flex items-center gap-3 hover:shadow-[0_0_20px_rgba(233,195,73,0.3)] active:scale-95 transition-all">
+                    Proceed to Review
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Right Column: Sidebar -->
+<aside class="w-full md:w-80 space-y-6">
+<!-- Progress / Summary Card -->
+<div class="glass-card p-6 rounded-xl space-y-6 sticky top-24">
+<h3 class="font-label-caps text-label-caps text-primary border-b border-white/10 pb-4">Dispute Summary</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Property</p>
+<p class="font-body-md text-body-md text-on-surface">Ethereal Heights Unit 402</p>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Tenant</p>
+<p class="font-body-md text-body-md text-on-surface">Alex Rivera</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg space-y-3">
+<p class="font-label-caps text-label-caps text-secondary">Disputed Amount</p>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">$2,450.00</span>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-data-mono text-data-mono text-on-surface-variant">≈ 0.982 ETH</span>
+<span class="material-symbols-outlined text-[10px] text-tertiary">trending_up</span>
+</div>
+<span class="font-data-mono text-data-mono text-tertiary mt-1">≈ 12,400 GEN</span>
+</div>
+</div>
+<!-- AI Reasoning Feed -->
+<div class="ai-reasoning-border pl-4 space-y-3 py-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-sm">neurology</span>
+<span class="font-label-caps text-label-caps text-tertiary">AI Live Verdict Engine</span>
+</div>
+<p class="text-tertiary font-data-mono text-xs opacity-80 leading-relaxed">
+                            &gt; Analyzing photo metadata...<br/>
+                            &gt; Comparing to move-in files...<br/>
+                            &gt; Wear &amp; Tear probability: 12%<br/>
+                            &gt; Physical Damage probability: 88%
+                        </p>
+</div>
+</div>
+<div class="pt-4 border-t border-white/10">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Overall Progress</span>
+<span class="font-data-mono text-data-mono text-secondary">75%</span>
+</div>
+<div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full" style="width: 75%"></div>
+</div>
+</div>
+</div>
+<!-- Help / Info Card -->
+<div class="p-6 rounded-xl bg-secondary-container/10 border border-secondary/20">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-secondary">info</span>
+<div class="space-y-2">
+<p class="font-label-caps text-label-caps text-secondary">Pro Tip</p>
+<p class="text-on-surface-variant text-sm font-body-md">Ensuring your photos have original EXIF data (date/location) speeds up the AI verification process by up to 40%.</p>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-white/5 py-12 mt-20">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop gap-gutter max-w-container-max mx-auto">
+<div class="space-y-4">
+<div class="font-headline-sm text-primary">TenantVerdict</div>
+<p class="text-on-surface-variant font-body-md text-body-md">© 2024 TenantVerdict. Powered by GenLayer.</p>
+</div>
+<div class="flex flex-wrap gap-8">
+<a class="text-on-surface-variant hover:text-primary transition-all font-body-md text-body-md hover:underline decoration-secondary" href="#">Blockchain Explorer</a>
+<a class="text-on-surface-variant hover:text-primary transition-all font-body-md text-body-md hover:underline decoration-secondary" href="#">Smart Contracts</a>
+<a class="text-on-surface-variant hover:text-primary transition-all font-body-md text-body-md hover:underline decoration-secondary" href="#">Legal Framework</a>
+<a class="text-on-surface-variant hover:text-primary transition-all font-body-md text-body-md hover:underline decoration-secondary" href="#">Terms</a>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interaction for currency conversion simulation
+        // In a real app, this would react to user input in the "Deposit" step
+        let amounts = {
+            usd: 2450.00,
+            eth: 0.982,
+            gen: 12400
+        };
+
+        // Adding a subtle mouse move effect to the glass cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>
