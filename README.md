@@ -51,6 +51,12 @@ TenantVerdict consists of 3 interacting GenLayer Intelligent Contracts in `contr
 
 ---
 
+## 🚀 Live Application
+
+- **Live Web App**: [https://tenant-verdict-genlayer.vercel.app](https://tenant-verdict-genlayer.vercel.app)
+
+---
+
 ## 📋 Deployed Contract (studionet)
 
 - **Contract Address**: `0xCd51507ed83C6AA140de7f85e19872Ac1AC41Be6`
@@ -59,6 +65,7 @@ TenantVerdict consists of 3 interacting GenLayer Intelligent Contracts in `contr
 | Contract | Network | Address | Explorer Link |
 |---|---|---|---|
 | `TenantVerdict` | `studionet` | `0xCd51507ed83C6AA140de7f85e19872Ac1AC41Be6` | [Explorer](https://genlayer-explorer.vercel.app/address/0xCd51507ed83C6AA140de7f85e19872Ac1AC41Be6) |
+
 
 
 ---
