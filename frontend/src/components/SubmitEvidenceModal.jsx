@@ -8,6 +8,7 @@ export default function SubmitEvidenceModal({ isOpen, onClose, dispute, onSubmit
   const [statement, setStatement] = useState(
     'I professionally cleaned all carpets and spackled small nail holes upon move-out. The wall mark mentioned by the landlord was preexisting as shown in move-in photos.'
   );
+  const [isVerified, setIsVerified] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen || !dispute) return null;
@@ -30,6 +31,10 @@ export default function SubmitEvidenceModal({ isOpen, onClose, dispute, onSubmit
     e.preventDefault();
     if (moveOutUrls.filter((u) => u.trim()).length === 0 || !statement.trim()) {
       alert('Please provide move-out evidence links and a counter statement.');
+      return;
+    }
+    if (!isVerified) {
+      alert('Please verify and check the metadata certification checkbox.');
       return;
     }
     setIsSubmitting(true);
@@ -62,18 +67,27 @@ export default function SubmitEvidenceModal({ isOpen, onClose, dispute, onSubmit
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Drag & Drop Upload Zone Visual Box */}
+          <div className="border-2 border-dashed border-white/15 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:border-[#e9c349] transition-colors cursor-pointer bg-[#1a1c1c]/50">
+            <div className="w-12 h-12 rounded-full bg-[#e9c349]/10 text-[#e9c349] flex items-center justify-center mb-3">
+              <span className="material-symbols-outlined text-2xl">upload_file</span>
+            </div>
+            <p className="text-xs font-bold text-white font-mono mb-1">Drag & Drop Move-Out Evidence Files</p>
+            <p className="text-[11px] text-zinc-400 font-mono mb-3">PNG, JPG, or HEIC (Max 20MB per file)</p>
+            <button
+              type="button"
+              onClick={handleAddUrl}
+              className="px-4 py-1.5 border border-[#e9c349] text-[#e9c349] rounded-lg text-xs font-mono font-bold hover:bg-[#e9c349] hover:text-[#3c2f00] transition-all"
+            >
+              + Add Web Evidence Link
+            </button>
+          </div>
+
           <div className="space-y-2">
             <div className="flex items-center justify-between mb-1">
               <label className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
                 Move-Out Condition Web Evidence URLs
               </label>
-              <button
-                type="button"
-                onClick={handleAddUrl}
-                className="text-xs text-[#4ce337] hover:underline font-bold flex items-center gap-1"
-              >
-                + Add Link
-              </button>
             </div>
             {moveOutUrls.map((url, idx) => (
               <div key={idx} className="flex items-center gap-2 mb-2">
@@ -110,6 +124,20 @@ export default function SubmitEvidenceModal({ isOpen, onClose, dispute, onSubmit
               className="input-field-dark w-full text-xs"
               required
             />
+          </div>
+
+          {/* Metadata Checkbox Certification */}
+          <div className="flex items-start gap-3 pt-2">
+            <input
+              type="checkbox"
+              id="verify-check"
+              checked={isVerified}
+              onChange={(e) => setIsVerified(e.target.checked)}
+              className="mt-0.5 rounded bg-[#121414] border-white/20 text-[#e9c349] focus:ring-[#e9c349]"
+            />
+            <label htmlFor="verify-check" className="text-xs text-zinc-300 leading-relaxed cursor-pointer font-mono">
+              I certify that these images are unedited and were captured at the time of lease termination. Metadata is intact for GenLayer blockchain verification.
+            </label>
           </div>
 
           <div className="pt-5 border-t border-white/10 flex justify-end gap-3">

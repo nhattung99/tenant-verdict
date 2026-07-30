@@ -11,6 +11,7 @@ export default function VerdictInspector({
 }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [consensusStep, setConsensusStep] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   if (!dispute) return null;
 
@@ -64,7 +65,7 @@ export default function VerdictInspector({
         </div>
       </div>
 
-      {/* Case Header Banner */}
+      {/* Case Header Banner & Deadline */}
       <div className="glass-card p-8 border-white/10 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <span className="text-xs font-mono font-bold text-[#e9c349] bg-[#e9c349]/10 px-3 py-1 rounded border border-[#e9c349]/20 uppercase tracking-widest">
@@ -78,11 +79,25 @@ export default function VerdictInspector({
           </p>
         </div>
 
-        <div className="bg-[#1a1c1c] border border-[#e9c349]/30 p-5 rounded-xl flex items-center gap-4 glow-border-gold font-mono">
-          <span className="material-symbols-outlined text-[#e9c349] text-3xl">account_balance</span>
-          <div>
-            <div className="text-[10px] uppercase font-bold text-[#e9c349] tracking-wider">Escrowed Deposit</div>
-            <div className="text-2xl font-extrabold text-white">{dispute.deposit_amount} GEN</div>
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          {/* Submission Deadline Card */}
+          <div className="bg-[#93000a]/20 border border-[#ffb4ab]/30 p-4 rounded-xl flex items-center gap-3 glow-border-gold">
+            <span className="material-symbols-outlined text-[#e9c349] text-3xl">timer</span>
+            <div>
+              <div className="text-[10px] font-mono font-bold text-[#e9c349] uppercase tracking-wider">Submission Deadline</div>
+              <div className="font-mono text-xl font-extrabold text-white tracking-widest">
+                48h 12m <span className="animate-pulse text-[#e9c349]">_</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Escrow Deposit Card */}
+          <div className="bg-[#1a1c1c] border border-[#e9c349]/30 p-4 rounded-xl flex items-center gap-3 glow-border-gold font-mono">
+            <span className="material-symbols-outlined text-[#e9c349] text-3xl">account_balance</span>
+            <div>
+              <div className="text-[10px] uppercase font-bold text-[#e9c349] tracking-wider">Escrowed Deposit</div>
+              <div className="text-xl font-extrabold text-white">{dispute.deposit_amount} GEN</div>
+            </div>
           </div>
         </div>
       </div>
@@ -112,7 +127,8 @@ export default function VerdictInspector({
       {/* Main Trial Details Grid: Evidence Bento */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: Landlord Evidence */}
-        <section className="glass-card p-6 border-white/10 space-y-5">
+        <section className="glass-card p-6 border-white/10 space-y-5 relative overflow-hidden">
+          <span className="material-symbols-outlined absolute top-4 right-4 text-7xl text-white/5 pointer-events-none">scale</span>
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <h3 className="font-serif text-xl font-bold text-white flex items-center gap-2">
               <span className="material-symbols-outlined text-[#e9c349]">gavel</span> Landlord's Evidence
@@ -120,7 +136,23 @@ export default function VerdictInspector({
             <span className="text-[11px] font-mono text-zinc-400 bg-white/5 px-2.5 py-1 rounded">Move-in Gallery</span>
           </div>
 
-          <div className="space-y-3">
+          {/* Photo Gallery Grid */}
+          <div className="grid grid-cols-2 gap-3">
+            {dispute.movein_evidence_urls?.map((url, i) => (
+              <div
+                key={i}
+                onClick={() => setSelectedImage(url)}
+                className="aspect-video rounded-xl bg-[#1a1c1c] border border-white/10 overflow-hidden relative group cursor-pointer hover:border-[#e9c349]/50 transition-all"
+              >
+                <img src={url} alt={`Move-in Evidence ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-[10px] font-mono text-white">
+                  LINK #{i + 1}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="space-y-2 pt-3 border-t border-white/10">
             <h4 className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider">Web Evidence Links</h4>
             <ul className="space-y-2 font-mono text-xs">
               {dispute.movein_evidence_urls?.map((url, i) => (
@@ -145,6 +177,24 @@ export default function VerdictInspector({
               Move-out Gallery
             </span>
           </div>
+
+          {/* Photo Gallery Grid */}
+          {dispute.moveout_evidence_urls?.length > 0 && (
+            <div className="grid grid-cols-2 gap-3">
+              {dispute.moveout_evidence_urls.map((url, i) => (
+                <div
+                  key={i}
+                  onClick={() => setSelectedImage(url)}
+                  className="aspect-video rounded-xl bg-[#1a1c1c] border border-white/10 overflow-hidden relative group cursor-pointer hover:border-[#4ce337]/50 transition-all"
+                >
+                  <img src={url} alt={`Move-out Evidence ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-[10px] font-mono text-white">
+                    LINK #{i + 1}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="space-y-3">
             <h4 className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider">Web Evidence Links</h4>
@@ -268,6 +318,21 @@ export default function VerdictInspector({
           </div>
         )}
       </div>
+
+      {/* Image Lightbox Modal */}
+      {selectedImage && (
+        <div className="modal-overlay" onClick={() => setSelectedImage(null)}>
+          <div className="glass-card max-w-3xl p-4 relative" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-2 right-2 bg-black/80 text-white p-2 rounded-full hover:bg-rose-600 transition-colors z-10"
+            >
+              <span className="material-symbols-outlined">close</span>
+            </button>
+            <img src={selectedImage} alt="Evidence Lightbox" className="w-full h-auto max-h-[80vh] object-contain rounded-lg" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
