@@ -1,6 +1,9 @@
 // GenLayer Network and Contract Configuration
 
-const mainAddress = import.meta.env.VITE_CONTRACT_ADDRESS || '';
+// Canonical deployed contract address on GenLayer studionet
+export const CANONICAL_CONTRACT_ADDRESS = '0xCd51507ed83C6AA140de7f85e19872Ac1AC41Be6';
+
+const mainAddress = import.meta.env.VITE_CONTRACT_ADDRESS || CANONICAL_CONTRACT_ADDRESS;
 
 export const CONTRACT_ADDRESSES = {
   DISPUTE_COURT: import.meta.env.VITE_DISPUTE_COURT_ADDRESS || mainAddress,
