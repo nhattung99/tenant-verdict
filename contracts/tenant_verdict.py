@@ -197,7 +197,6 @@ Return ONLY a valid raw JSON object with NO markdown formatting, NO backticks:
             leader_conf = int(leader_val_dict["confidence"])
             my_conf = int(my_res["confidence"])
 
-            # Validate tolerance bounds across non-deterministic validator runs
             pct_agreed = abs(my_pct - leader_pct) <= 5
             conf_agreed = abs(my_conf - leader_conf) <= 15
             return pct_agreed and conf_agreed
@@ -284,7 +283,6 @@ Return ONLY raw JSON with NO markdown backticks:
         dispute = self.disputes[dispute_id]
         refund_pct = dispute.tenant_refund_pct
 
-        # Authoritative address binding check before funds release
         if dispute.tenant == Address("0x0000000000000000000000000000000000000000") or dispute.landlord == Address("0x0000000000000000000000000000000000000000"):
             raise UserError("Invalid participant recipient binding in dispute record")
 
@@ -295,7 +293,6 @@ Return ONLY raw JSON with NO markdown backticks:
 
             self.balances[dispute_id] = bigint(0)
 
-            # Strictly release payout ONLY to authoritative registered dispute tenant & landlord addresses
             if tenant_share > bigint(0):
                 gl.transfer(dispute.tenant, tenant_share)
             if landlord_share > bigint(0):
@@ -328,6 +325,10 @@ Return ONLY raw JSON with NO markdown backticks:
             "confidence": int(d.confidence),
             "appeal_count": int(d.appeal_count),
         }
+
+    @gl.public.view
+    def get_dispute_count(self) -> u256:
+        return u256(self.dispute_counter)
 
     @gl.public.view
     def get_escrow_balance(self, dispute_id: str) -> str:

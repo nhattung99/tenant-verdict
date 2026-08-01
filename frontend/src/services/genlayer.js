@@ -19,18 +19,15 @@ export const connectMetaMask = async () => {
     throw new Error('MetaMask is not installed. Please install MetaMask to use TenantVerdict.');
   }
 
-  // Request accounts
   const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
   const account = accounts[0];
 
-  // Auto-switch to GenLayer studionet
   try {
     await window.ethereum.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: STUDIONET_CONFIG.chainId }],
     });
   } catch (switchError) {
-    // 4902 error code indicates chain has not been added to MetaMask
     if (switchError.code === 4902 || switchError?.data?.originalError?.code === 4902) {
       try {
         await window.ethereum.request({
@@ -58,12 +55,18 @@ export const createDisputeTx = async (userAddress, tenantAddress, moveInUrls, de
   const client = getGenLayerClient(userAddress);
   const depositWei = BigInt(Math.floor(parseFloat(depositEthAmount) * 1e18));
 
+  // Write create_dispute call to contract
   const txHash = await client.writeContract({
     address: CONTRACT_ADDRESSES.DISPUTE_COURT,
     functionName: 'create_dispute',
     args: [tenantAddress, moveInUrls],
     value: depositWei,
   });
+
+  // Await transaction completion before returning
+  if (client.waitForTransactionReceipt) {
+    await client.waitForTransactionReceipt({ hash: txHash });
+  }
 
   return txHash;
 };
@@ -77,6 +80,10 @@ export const submitEvidenceTx = async (userAddress, disputeId, moveOutUrls, stat
     args: [String(disputeId), moveOutUrls, statement],
   });
 
+  if (client.waitForTransactionReceipt) {
+    await client.waitForTransactionReceipt({ hash: txHash });
+  }
+
   return txHash;
 };
 
@@ -89,6 +96,11 @@ export const requestVerdictTx = async (userAddress, disputeId) => {
     args: [String(disputeId)],
   });
 
+  // Await consensus execution & payout finalization on-chain before returning
+  if (client.waitForTransactionReceipt) {
+    await client.waitForTransactionReceipt({ hash: txHash });
+  }
+
   return txHash;
 };
 
@@ -100,6 +112,10 @@ export const appealVerdictTx = async (userAddress, disputeId) => {
     functionName: 'appeal_verdict',
     args: [String(disputeId)],
   });
+
+  if (client.waitForTransactionReceipt) {
+    await client.waitForTransactionReceipt({ hash: txHash });
+  }
 
   return txHash;
 };
@@ -114,6 +130,20 @@ export const fetchDisputeData = async (disputeId) => {
   return dispute;
 };
 
+export const fetchDisputeCount = async () => {
+  const client = getGenLayerClient();
+  try {
+    const count = await client.readContract({
+      address: CONTRACT_ADDRESSES.DISPUTE_COURT,
+      functionName: 'get_dispute_count',
+      args: [],
+    });
+    return Number(count);
+  } catch (e) {
+    return 0;
+  }
+};
+
 export const fetchUserReputation = async (userAddress) => {
   const client = getGenLayerClient();
   try {
@@ -122,30 +152,14 @@ export const fetchUserReputation = async (userAddress) => {
       functionName: 'get_trust_score',
       args: [userAddress],
     });
-    const totalDisputes = await client.readContract({
-      address: CONTRACT_ADDRESSES.REPUTATION,
-      functionName: 'get_total_disputes',
-      args: [userAddress],
-    });
-    const wins = await client.readContract({
-      address: CONTRACT_ADDRESSES.REPUTATION,
-      functionName: 'get_wins',
-      args: [userAddress],
-    });
-    const losses = await client.readContract({
-      address: CONTRACT_ADDRESSES.REPUTATION,
-      functionName: 'get_losses',
-      args: [userAddress],
-    });
 
     return {
       trust_score: Number(trustScore),
-      total_disputes: Number(totalDisputes),
-      wins: Number(wins),
-      losses: Number(losses),
+      total_disputes: 0,
+      wins: 0,
+      losses: 0,
     };
   } catch (e) {
     return { trust_score: 100, total_disputes: 0, wins: 0, losses: 0 };
   }
 };
-
